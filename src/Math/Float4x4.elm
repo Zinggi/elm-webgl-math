@@ -286,3 +286,70 @@ makeTranslate ( x, y, z ) =
     , ( 0, 0, 1, 0 )
     , ( x, y, z, 1 )
     )
+
+
+makeTransform ( tx, ty, tz ) ( sx, sy, sz ) ( ax, ay, az ) angle ( px, py, pz ) =
+    -- I used pythons sympy library to arrive at this result
+    -- It's Tp*T*S*R*(-Tp)
+    --  Where
+    --      Tp = makeTranslate (px,py,pz)
+    --      T = makeTranslate (tx,ty,tz)
+    --      S = makeScale (sx,sy,sz)
+    --      R = makeRotate angle (ax,ay,az)
+    let
+        ( c, s ) =
+            ( cos angle, sin angle )
+
+        c1 =
+            1 - c
+
+        ( axs, ays, azs ) =
+            ( ax * s, ay * s, az * s )
+
+        ( azc1, ayc1 ) =
+            ( az * c1, ay * c1 )
+
+        ( ax_2c1, ay_2c1, az_2c1 ) =
+            ( ax * ax * c1, ay * ayc1, az * azc1 )
+
+        ( axyc1, axzc1, ayzc1 ) =
+            ( ax * ayc1, ax * azc1, ay * azc1 )
+
+        ( pstx, psty, pstz ) =
+            ( px + sx + tx, py + sy + ty, pz + sz + tz )
+    in
+        ( ( -ax_2c1 - c, -axyc1 - azs, -axzc1 + ays, 0 )
+        , ( -axyc1 + azs, -ay_2c1 - c, -axs - ayzc1, 0 )
+        , ( -axzc1 - ays, axs - ayzc1, -az_2c1 - c, 0 )
+        , ( -px - (ax_2c1 + c) * (pstx) - (axyc1 - azs) * (psty) - (axzc1 + ays) * (pstz), -py - (-axs + ayzc1) * (pstz) - (ay_2c1 + c) * (psty) - (axyc1 + azs) * (pstx), -pz - (axs + ayzc1) * (psty) - (az_2c1 + c) * (pstz) - (axzc1 - ays) * (pstx), -1 )
+        )
+
+
+transformBy ( tx, ty, tz ) ( sx, sy, sz ) ( ax, ay, az ) angle ( px, py, pz ) ( x, y, z ) =
+    let
+        ( c, s ) =
+            ( cos angle, sin angle )
+
+        c1 =
+            1 - c
+
+        ( azc1, ayc1 ) =
+            ( az * c1, ay * c1 )
+
+        ( ax_2c1, ay_2c1, az_2c1 ) =
+            ( ax * ax * c1, ay * ayc1, az * azc1 )
+
+        ( axyc1, axzc1, ayzc1 ) =
+            ( ax * ayc1, ax * azc1, ay * azc1 )
+
+        ( ays, azs, axs ) =
+            ( ay * s, az * s, ax * s )
+
+        ( pstx, psty, pstz ) =
+            ( px + sx + tx, py + sy + ty, pz + sz + tz )
+    in
+        ( x * (-ax_2c1 - c) + y * (-axyc1 - azs) + z * (-axzc1 + ays)
+        , x * (-axyc1 + azs) + y * (-ay_2c1 - c) + z * (-axs - ayzc1)
+        , x * (-axzc1 - ays) + y * (axs - ayzc1) + z * (-az_2c1 - c)
+        , x * (-px - (ax_2c1 + c) * (pstx) - (axyc1 - azs) * (psty) - (axzc1 + ays) * (pstz)) + y * (-py - (-axs + ayzc1) * (pstz) - (ay_2c1 + c) * (psty) - (axyc1 + azs) * (pstx)) + z * (-pz - (axs + ayzc1) * (psty) - (az_2c1 + c) * (pstz) - (axzc1 - ays) * (pstx)) - 1
+        )
