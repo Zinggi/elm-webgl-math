@@ -41,11 +41,15 @@ sub =
     map2 (-)
 
 
+elementWiseMul =
+    map2 (*)
+
+
 transpose ( ( a11, a12 ), ( a21, a22 ) ) =
     ( ( a11, a21 )
     , ( a12, a22 )
     )
 
 
-transform ( v1, v2 ) v =
+mulVector ( v1, v2 ) v =
     ( V2.dot v1 v, V2.dot v2 v )

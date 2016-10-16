@@ -98,8 +98,8 @@ makeTransformM4Naive_ res n =
 makeTransformNaive translation scale rotationAxis rotation pivot =
     M4.identity
         |> M4.translate (V3.negate pivot)
-        |> M4.rotate rotation rotationAxis
         |> M4.scale scale
+        |> M4.rotate rotation rotationAxis
         |> M4.translate (V3.add pivot translation)
 
 
@@ -117,6 +117,6 @@ makeTransformRef4_ res n =
 ref4makeTransform translation scale rotationAxis rotation pivot =
     RefM4.identity
         |> RefM4.translate (RefV3.negate pivot)
-        |> RefM4.rotate rotation rotationAxis
         |> RefM4.scale scale
+        |> RefM4.rotate rotation rotationAxis
         |> RefM4.translate (RefV3.add pivot translation)

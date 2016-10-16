@@ -111,3 +111,14 @@ distance a b =
 
 distanceSquared a b =
     lengthSquared (sub a b)
+
+
+angle a b =
+    let
+        r =
+            dot a b / (length a * length b)
+    in
+        if r >= 1 then
+            0
+        else
+            acos r
