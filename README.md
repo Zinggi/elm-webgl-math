@@ -22,8 +22,8 @@ This is meant as a replacement for **elm-community/elm-linear-algebra**.
 This needs to be explored more, but first results look very promising.
 Matrix multiplication is just as fast as in *elm-community/elm-linear-algebra* and some more complicated examples are much faster because we can directly construct matrices.
 
-These results are on from my laptop, try for yourself!
-[Here:](/bench)
+These results are from my laptop, try for yourself!
+[Here](/bench)
 
 My library is:
  * **Just as fast as** elm-community for matrix multiplication
