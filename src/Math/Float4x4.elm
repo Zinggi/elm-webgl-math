@@ -2,6 +2,7 @@ module Math.Float4x4 exposing (..)
 
 import Math.Float4 as V4 exposing (Float4, Vec4)
 import Math.Float3 as V3 exposing (Float3, Vec3)
+import Math.Float3x3 as M3
 
 
 -- Useful websites/references:
@@ -41,6 +42,11 @@ map f =
 
 map2 f =
     V4.map2 (V4.map2 f)
+
+
+fold : (a -> b -> b) -> b -> Mat4x4 a -> b
+fold f init ( m1, m2, m3, m4 ) =
+    (V4.fold f (V4.fold f (V4.fold f (V4.fold f init m1) m2) m3) m4)
 
 
 add =
@@ -85,6 +91,13 @@ transpose ( ( a11, a12, a13, a14 ), ( a21, a22, a23, a24 ), ( a31, a32, a33, a34
     , ( a13, a23, a33, a43 )
     , ( a14, a24, a34, a44 )
     )
+
+
+det ( ( a11, a12, a13, a14 ), ( a21, a22, a23, a24 ), ( a31, a32, a33, a34 ), ( a41, a42, a43, a44 ) ) =
+    (a11 * M3.det ( ( a22, a23, a24 ), ( a32, a33, a34 ), ( a42, a43, a44 ) ))
+        - (a12 * M3.det ( ( a21, a23, a24 ), ( a31, a33, a34 ), ( a41, a43, a44 ) ))
+        + (a13 * M3.det ( ( a21, a22, a24 ), ( a31, a32, a34 ), ( a41, a42, a44 ) ))
+        - (a14 * M3.det ( ( a22, a23, a24 ), ( a31, a32, a33 ), ( a41, a42, a43 ) ))
 
 
 
@@ -152,12 +165,16 @@ Rotate an affine transform by an angle along the given axis.
 -}
 rotate angle (( a0, a1, a2 ) as axis) ( ( m11, m12, m13, m14 ), ( m21, m22, m23, m24 ), ( m31, m32, m33, m34 ), m4 ) =
     let
-        l =
-            sqrt (a0 * a0 + a1 * a1 + a2 * a2)
+        l_2 =
+            a0 * a0 + a1 * a1 + a2 * a2
 
         ( x, y, z ) =
-            if l /= 1.0 then
-                ( a0 / l, a1 / l, a2 / l )
+            if l_2 /= 1.0 then
+                let
+                    l_1 =
+                        1 / (sqrt l_2)
+                in
+                    ( a0 * l_1, a1 * l_1, a2 * l_1 )
             else
                 ( a0, a1, a2 )
 
@@ -247,20 +264,38 @@ transformAffine ( ( a11, a12, a13, a14 ), ( a21, a22, a23, a24 ), ( a31, a32, a3
     )
 
 
+
+--|
+--Calculate the inverse of an affine transform.
+--This represents doing all the transformations in reverse.
+--
+--        should be (inv(R), -inv(R)*t)
+--                  (      0,        1)
+--inverseAffine ( ( a11, a12, a13, t1 ), ( a21, a22, a23, t2 ), ( a31, a32, a33, t3 ), a4 ) =
+--    TODO
+--
+--
+--|
+--
+--| R t |^-1 * |t| = | R^-1 * (t - b) |
+--| 0 1 |      |1| = | 1              |
+--transformBackAffine m b =
+--    TODO
+
+
 {-|
-Calculate the inverse of an affine transform.
-This represents doing all the transformations in reverse.
+Calculate the inverse of a rigid body transform.
+This a special form of affine transform, that is only composed of
+rotations and translations.
+
+    | R t |^-1 = | R^T -R^T*t |
+    | 0 1 |      | 0    1     |
+
 -}
-inverseAffine ( ( a11, a12, a13, t1 ), ( a21, a22, a23, t2 ), ( a31, a32, a33, t3 ), a4 ) =
-    -- TODO: this is wrong!
-    -- e.g. the inverse of a scale matrix isn't S.T
-    -- This is only true for rotation and translation
-    -- Since R is an orthogonal matrix, the inverse of an affine transform looks like this:
-    --   |R^T -R^T*t|
-    --   |0    1    |
-    --
-    -- I renamed inverseOrthonormal to inverseAffine, as the other name didn't make sense,
+inverseRigidBodyTransform ( ( a11, a12, a13, t1 ), ( a21, a22, a23, t2 ), ( a31, a32, a33, t3 ), a4 ) =
+    -- I renamed inverseOrthonormal to inverseRidgidBodyTransform, as the other name didn't make sense,
     -- as the inverse of an orthonormal matrix is just the transpose of that matrix.
+    -- I don't know what the original inverseOrthonormal actually did, but it might have done this.
     ( ( a11, a21, a31, -a11 * t1 - a21 * t2 - a31 * t3 )
     , ( a12, a22, a32, -a12 * t1 - a22 * t2 - a32 * t3 )
     , ( a13, a23, a33, -a13 * t1 - a23 * t2 - a33 * t3 )
@@ -346,7 +381,7 @@ makeLookAt eye target up =
         (( x0, x1, x2 ) as x) =
             V3.normalize (V3.cross z up)
 
-        ( y0, y1, y2 ) =
+        (( y0, y1, y2 ) as y) =
             V3.normalize (V3.cross x z)
     in
         ( ( x0, x1, x2, -(V3.dot x eye) )
@@ -356,13 +391,9 @@ makeLookAt eye target up =
         )
 
 
-makeTransform ( tx, ty, tz ) ( sx, sy, sz ) ( ax, ay, az ) angle ( px, py, pz ) =
-    -- TODO: this is wrong!
-    -- I only need to do T*R*S*(-Tp)
-    -- and I used wrong row order!
-    --
+makeTransform ( tx, ty, tz ) ( sx, sy, sz ) axis angle ( px, py, pz ) =
     -- I used pythons sympy library to arrive at this result
-    -- It's Tp*T*S*R*(-Tp)
+    -- It's T*R*S*(Tp^-1)
     --  Where
     --      Tp = makeTranslate (px,py,pz)
     --      T = makeTranslate (tx,ty,tz)
@@ -375,57 +406,36 @@ makeTransform ( tx, ty, tz ) ( sx, sy, sz ) ( ax, ay, az ) angle ( px, py, pz ) 
         c1 =
             1 - c
 
-        ( axs, ays, azs ) =
-            ( ax * s, ay * s, az * s )
+        ( rx, ry, rz ) =
+            V3.normalize axis
 
-        ( azc1, ayc1 ) =
-            ( az * c1, ay * c1 )
+        ( rxs, rys, rzs ) =
+            ( rx * s, ry * s, rz * s )
 
-        ( ax_2c1, ay_2c1, az_2c1 ) =
-            ( ax * ax * c1, ay * ayc1, az * azc1 )
+        ( rxc1, ryc1 ) =
+            ( rx * c1, ry * c1 )
 
-        ( axyc1, axzc1, ayzc1 ) =
-            ( ax * ayc1, ax * azc1, ay * azc1 )
+        ( ryxc1, rzxc1, rzyc1 ) =
+            ( ry * rxc1, rz * rxc1, rz * ryc1 )
 
-        ( pstx, psty, pstz ) =
-            ( px + sx + tx, py + sy + ty, pz + sz + tz )
+        ( new_x1, new_x2, new_x3 ) =
+            ( sx * (rx * rxc1 + c), sx * (ryxc1 + rzs), sx * (rzxc1 - rys) )
+
+        ( new_y1, new_y2, new_y3 ) =
+            ( sy * (ryxc1 - rzs), sy * (ry * ryc1 + c), sy * (rzyc1 + rxs) )
+
+        ( new_z1, new_z2, new_z3 ) =
+            ( sz * (rzxc1 + rys), sz * (rzyc1 - rxs), sz * (rz * rz * c1 + c) )
     in
-        ( ( -ax_2c1 - c, -axyc1 - azs, -axzc1 + ays, 0 )
-        , ( -axyc1 + azs, -ay_2c1 - c, -axs - ayzc1, 0 )
-        , ( -axzc1 - ays, axs - ayzc1, -az_2c1 - c, 0 )
-        , ( -px - (ax_2c1 + c) * (pstx) - (axyc1 - azs) * (psty) - (axzc1 + ays) * (pstz), -py - (-axs + ayzc1) * (pstz) - (ay_2c1 + c) * (psty) - (axyc1 + azs) * (pstx), -pz - (axs + ayzc1) * (psty) - (az_2c1 + c) * (pstz) - (axzc1 - ays) * (pstx), -1 )
+        ( ( new_x1, new_y1, new_z1, -px * new_x1 - py * new_y1 - pz * new_z1 + tx )
+        , ( new_x2, new_y2, new_z2, -px * new_x2 - py * new_y2 - pz * new_z2 + ty )
+        , ( new_x3, new_y3, new_z3, -px * new_x3 - py * new_y3 - pz * new_z3 + tz )
+        , ( 0, 0, 0, 1 )
         )
 
 
-transformBy ( tx, ty, tz ) ( sx, sy, sz ) ( ax, ay, az ) angle ( px, py, pz ) ( x, y, z ) =
-    -- TODO: Wrong! see above
-    let
-        ( c, s ) =
-            ( cos angle, sin angle )
-
-        c1 =
-            1 - c
-
-        ( azc1, ayc1 ) =
-            ( az * c1, ay * c1 )
-
-        ( ax_2c1, ay_2c1, az_2c1 ) =
-            ( ax * ax * c1, ay * ayc1, az * azc1 )
-
-        ( axyc1, axzc1, ayzc1 ) =
-            ( ax * ayc1, ax * azc1, ay * azc1 )
-
-        ( ays, azs, axs ) =
-            ( ay * s, az * s, ax * s )
-
-        ( pstx, psty, pstz ) =
-            ( px + sx + tx, py + sy + ty, pz + sz + tz )
-    in
-        ( x * (-ax_2c1 - c) + y * (-axyc1 - azs) + z * (-axzc1 + ays)
-        , x * (-axyc1 + azs) + y * (-ay_2c1 - c) + z * (-axs - ayzc1)
-        , x * (-axzc1 - ays) + y * (axs - ayzc1) + z * (-az_2c1 - c)
-        , x * (-px - (ax_2c1 + c) * (pstx) - (axyc1 - azs) * (psty) - (axzc1 + ays) * (pstz)) + y * (-py - (-axs + ayzc1) * (pstz) - (ay_2c1 + c) * (psty) - (axyc1 + azs) * (pstx)) + z * (-pz - (axs + ayzc1) * (psty) - (az_2c1 + c) * (pstz) - (axzc1 - ays) * (pstx)) - 1
-        )
+transformBy translation scale axis angle pivot =
+    transformAffine (makeTransform translation scale axis angle pivot)
 
 
 
@@ -481,3 +491,18 @@ Same as makeOrtho, but with znear = -1 and zfar = 1 set.
 -}
 makeOrtho2d left right bottom top =
     makeOrtho left right bottom top -1 1
+
+
+{-|
+This checks whether `|A - B| < eps`.
+
+This is useful for testing, see the tests of this library for how this makes testing easy.
+
+Since any definition of a norm can be used for this, it uses the simple `max norm`
+-}
+almostEqual eps a b =
+    maxNorm (sub a b) <= eps
+
+
+maxNorm =
+    fold (\elem acc -> max (abs elem) acc) 0

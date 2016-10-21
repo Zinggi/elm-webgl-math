@@ -52,6 +52,10 @@ transpose ( ( a11, a12, a13 ), ( a21, a22, a23 ), ( a31, a32, a33 ) ) =
     )
 
 
+det ( ( a11, a12, a13 ), ( a21, a22, a23 ), ( a31, a32, a33 ) ) =
+    a11 * (a22 * a33 - a23 * a32) - a12 * (a21 * a33 - a23 * a31) + a13 * (a21 * a32 - a22 * a31)
+
+
 mulVector ( v1, v2, v3 ) v =
     ( V3.dot v1 v, V3.dot v2 v, V3.dot v3 v )
 

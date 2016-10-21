@@ -9,7 +9,7 @@ import Math.Float4x4 as V
 
 all =
     describe "Float4x4"
-        [ add, minus, mul, transpose, translate, transform ]
+        [ add, minus, mul, transpose, translate, transform, makeTransform, inverseRigidBodyTransform ]
 
 
 
@@ -65,6 +65,26 @@ transform =
                     |> V.transform (V.makeTranslate ( -1, -2, 3 ))
                     |> V.transform (V.makeTranslate ( 1, 2, -3 ))
                 )
+        )
+
+
+inverseRigidBodyTransform =
+    Test.fuzzWith { runs = 20 }
+        --fuzz
+        m4rigidBody
+        "inverseRigidBodyTransform"
+        (\m4 ->
+            expectAlmostEqualM4 (V.mul (V.inverseRigidBodyTransform m4) m4) (V.identity)
+        )
+
+
+makeTransform =
+    Test.fuzzWith { runs = 20 }
+        (Fuzz.tuple4 ( v3, v3NonZero, smallFloat, v3NonZero ))
+        "makeTransform"
+        (\( t, s, r, a ) ->
+            expectAlmostEqualM4 (V.makeTransform t s a r ( 0, 0, 0 ))
+                (V.mul (V.makeTranslate t) (V.mul (V.makeRotate r a) (V.makeScale s)))
         )
 
 

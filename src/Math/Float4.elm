@@ -61,6 +61,11 @@ map2 f ( x1, y1, z1, w1 ) ( x2, y2, z2, w2 ) =
     ( f x1 x2, f y1 y2, f z1 z2, f w1 w2 )
 
 
+fold : (a -> b -> b) -> b -> Vec4 a -> b
+fold f start ( x, y, z, w ) =
+    f w (f z (f y (f x start)))
+
+
 
 -- math
 

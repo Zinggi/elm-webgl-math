@@ -42,7 +42,7 @@ dot =
 lengthSquared =
     fuzz v2 "lengthSquared" <|
         \v ->
-            expectAlmostEqual (V.lengthSquared v) (Ref.lengthSquared (f2 v))
+            expectAlmostEqualErr 0.2 (V.lengthSquared v) (Ref.lengthSquared (f2 v))
 
 
 normalize =

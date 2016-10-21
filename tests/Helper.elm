@@ -7,12 +7,26 @@ import Math.Matrix4 as RefM4
 import Math.Float2 as V2
 import Math.Float3 as V3
 import Math.Float4 as V4
+import Math.Float4x4 as M4
 import Fuzz exposing (Fuzzer)
 import Expect
 
 
 smallFloat =
     Fuzz.floatRange -1000 1000
+
+
+smallNonZeroFloat =
+    Fuzz.map3
+        (\x y isX ->
+            if isX then
+                x
+            else
+                y
+        )
+        (Fuzz.floatRange 0.001 1000)
+        (Fuzz.floatRange -0.001 -1000)
+        Fuzz.bool
 
 
 v2 : Fuzzer V2.Float2
@@ -24,12 +38,39 @@ v3 =
     Fuzz.map3 (\x y z -> ( x, y, z )) smallFloat smallFloat smallFloat
 
 
+v3NonZero =
+    Fuzz.map3 (\x y z -> ( x, y, z )) smallNonZeroFloat smallNonZeroFloat smallNonZeroFloat
+
+
 v4 =
     Fuzz.map4 (\x y z w -> ( x, y, z, w )) smallFloat smallFloat smallFloat smallFloat
 
 
 m4 =
     Fuzz.map4 (\a b c d -> ( a, b, c, d )) v4 v4 v4 v4
+
+
+m4affine =
+    --Fuzz.map4
+    --    (\translation scale axis r ->
+    --        M4.makeTransform translation scale axis r ( 0, 0, 0 )
+    --    )
+    --    v3
+    --    v3NonZero
+    --    v3NonZero
+    --    smallFloat
+    Fuzz.map4 (\t s ro r -> M4.mul (M4.makeTranslate t) (M4.mul (M4.makeScale s) (M4.makeRotate r ro)))
+        v3
+        v3NonZero
+        v3NonZero
+        smallFloat
+
+
+m4rigidBody =
+    Fuzz.map3 (\t ro r -> M4.mul (M4.makeTranslate t) (M4.makeRotate r ro))
+        v3
+        v3NonZero
+        smallFloat
 
 
 expectAlmostEqualErr =
@@ -73,3 +114,15 @@ mkAlmostEqFn len sub toTup e a b =
     in
         Expect.true "" (err < e)
             |> Expect.onFail ("expected almost equal, failed with error " ++ toString err)
+
+
+expectAlmostEqualM4 a b =
+    Expect.true "" (M4.almostEqual 0.0001 a b)
+        |> Expect.onFail
+            ("expected almost equal, failed with error "
+                ++ toString (M4.maxNorm (M4.sub a b))
+                ++ "\n  a = "
+                ++ toString a
+                ++ "\n  b = "
+                ++ toString b
+            )

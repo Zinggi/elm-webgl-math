@@ -45,6 +45,10 @@ elementWiseMul =
     map2 (*)
 
 
+det ( ( a11, a12 ), ( a21, a22 ) ) =
+    a11 * a22 - a12 * a21
+
+
 transpose ( ( a11, a12 ), ( a21, a22 ) ) =
     ( ( a11, a21 )
     , ( a12, a22 )
