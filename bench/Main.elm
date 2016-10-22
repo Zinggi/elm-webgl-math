@@ -69,7 +69,7 @@ powRef4_ a0 a n =
 
 vectorAddition n =
     Benchmark.suiteWithOptions options
-        ("Useless vector addition/scale: f a b = f (a+b) (0.999999 * b), " ++ toString n ++ " times.")
+        ("Useless vector addition/scale: f a b = f (a+b) (-0.999999 * b), " ++ toString n ++ " times.")
         [ Benchmark.bench "V4.add / scale" (\() -> addV4 n ( 1, 2, 3, 5 ) ( -2, 5, 2.3, 0 ))
         , Benchmark.bench "RefV4.add / scale" (\() -> addRefV4 n (vec4 1 2 3 5) (vec4 -2 5 2.3 0))
         ]
@@ -99,14 +99,14 @@ rotateAround n =
 
 rotateM4 n m v =
     if n <= 0 then
-        Debug.log "M4 v" v
+        v
     else
         rotateM4 (n - 1) m (M4.transform m v)
 
 
 rotateRefM4 n m v =
     if n <= 0 then
-        Debug.log "RefM4 v" v
+        v
     else
         rotateRefM4 (n - 1) m (RefM4.transform m v)
 
