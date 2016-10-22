@@ -97,6 +97,32 @@ normalize v =
     divideBy (length v) v
 
 
+{-| The projection of `v` onto `w`.
+
+`(v dot w)/|w| * w/|w|`
+
+    project (2,1,0) (4,0,0) == (2,0,0)
+-}
+project : Float3 -> Float3 -> Float3
+project v w =
+    let
+        l_b =
+            lengthSquared b
+    in
+        scale ((dot v w) / l_b) w
+
+
+{-| The rejection of `v` onto `w`. This is always perpendicular to the projection.
+
+`v - (project v w)`
+
+    reject (2,1,0) (4,0,0) == (0,1,0)
+-}
+reject : Float3 -> Float3 -> Float3
+reject v w =
+    sub v (project v w)
+
+
 directionFromTo a b =
     normalize (sub b a)
 
