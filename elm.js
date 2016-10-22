@@ -12760,7 +12760,7 @@ var _user$project$Main$rotateRefM4 = F3(
 		rotateRefM4:
 		while (true) {
 			if (_elm_lang$core$Native_Utils.cmp(n, 0) < 1) {
-				return A2(_elm_lang$core$Debug$log, 'RefM4 v', v);
+				return v;
 			} else {
 				var _v6 = n - 1,
 					_v7 = m,
@@ -12777,7 +12777,7 @@ var _user$project$Main$rotateM4 = F3(
 		rotateM4:
 		while (true) {
 			if (_elm_lang$core$Native_Utils.cmp(n, 0) < 1) {
-				return A2(_elm_lang$core$Debug$log, 'M4 v', v);
+				return v;
 			} else {
 				var _v9 = n - 1,
 					_v10 = m,
@@ -12875,7 +12875,7 @@ var _user$project$Main$vectorAddition = function (n) {
 		_user$project$Main$options,
 		A2(
 			_elm_lang$core$Basics_ops['++'],
-			'Useless vector addition/scale: f a b = f (a+b) (0.999999 * b), ',
+			'Useless vector addition/scale: f a b = f (a+b) (-0.999999 * b), ',
 			A2(
 				_elm_lang$core$Basics_ops['++'],
 				_elm_lang$core$Basics$toString(n),
