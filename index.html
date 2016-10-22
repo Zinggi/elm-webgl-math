@@ -1,0 +1,26 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Example elm-benchmark application</title>
+	<link rel="stylesheet" href="//cdn.jsdelivr.net/pure/0.6.0/pure-min.css">
+        <style type="text/css">
+         TD, TH { padding: 0.5em }
+         TD.numeric { text-align: right; }
+        </style>
+    </head>
+    <body>
+        <!-- benchmark.js requires lodash -->
+        <script type="text/javascript" src="//cdn.jsdelivr.net/lodash/4.13.1/lodash.min.js"></script>
+        <script type="text/javascript" src="//cdn.jsdelivr.net/platform.js/1.3.1/platform.js"></script>
+        <script type="text/javascript" src="//cdn.jsdelivr.net/benchmarkjs/2.1.0/benchmark.js"></script>
+        <script type="text/javascript" src="elm.js"></script>
+
+        <div>See javascript console if no output appears below.</div>
+        <div id="output"></div>
+
+        <script type="text/javascript">
+         Elm.Main.embed(document.getElementById("output"));
+        </script>
+    </body>
+</html>
