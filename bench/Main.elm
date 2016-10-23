@@ -136,7 +136,7 @@ makeTransformM4_ res n =
     if n <= 0 then
         ()
     else
-        makeTransformM4_ (M4.makeTransform ( 1, 2, 3 ) ( 3, 1, 2 ) ( 4, 3, 2 ) 42.3 ( -3, 2, 10 )) (n - 1)
+        makeTransformM4_ (M4.makeTransform ( 1, 2, 3 ) ( 3, 1, 2 ) 42.3 ( 4, 3, 2 ) ( -3, 2, 10 )) (n - 1)
 
 
 makeTransformM4Naive =

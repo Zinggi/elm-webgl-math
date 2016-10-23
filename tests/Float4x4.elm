@@ -83,7 +83,7 @@ makeTransform =
         (Fuzz.tuple4 ( v3, v3NonZero, smallFloat, v3NonZero ))
         "makeTransform"
         (\( t, s, r, a ) ->
-            expectAlmostEqualM4 (V.makeTransform t s a r ( 0, 0, 0 ))
+            expectAlmostEqualM4 (V.makeTransform t s r a ( 0, 0, 0 ))
                 (V.mul (V.makeTranslate t) (V.mul (V.makeRotate r a) (V.makeScale s)))
         )
 

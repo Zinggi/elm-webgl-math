@@ -51,14 +51,6 @@ m4 =
 
 
 m4affine =
-    --Fuzz.map4
-    --    (\translation scale axis r ->
-    --        M4.makeTransform translation scale axis r ( 0, 0, 0 )
-    --    )
-    --    v3
-    --    v3NonZero
-    --    v3NonZero
-    --    smallFloat
     Fuzz.map4 (\t s ro r -> M4.mul (M4.makeTranslate t) (M4.mul (M4.makeScale s) (M4.makeRotate r ro)))
         v3
         v3NonZero

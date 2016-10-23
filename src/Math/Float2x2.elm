@@ -15,11 +15,19 @@ in Elm.
 
 @docs Float2x2, Mat2x2
 
+## General operations
+
 @docs map, map2, foldl, foldr
+
+## Math
 
 @docs identity, fromRows, fromColumns
 
 @docs add, sub, mul, elementWiseMul, mulByConst, transpose, mulVector
+
+## Other
+
+@docs almostEqual, maxNorm
 
 -}
 
@@ -50,6 +58,18 @@ map f =
 map2 : (a -> b -> c) -> Mat2x2 a -> Mat2x2 b -> Mat2x2 c
 map2 f =
     V2.map2 (V2.map2 f)
+
+
+{-| -}
+foldl : (elem -> acc -> acc) -> acc -> Mat2x2 elem -> acc
+foldl f init ( r1, r2 ) =
+    V2.foldl f (V2.foldl f init r1) r2
+
+
+{-| -}
+foldr : (elem -> acc -> acc) -> acc -> Mat2x2 elem -> acc
+foldr f init ( r1, r2 ) =
+    V2.foldr f (V2.foldr f init r2) r1
 
 
 
@@ -155,8 +175,6 @@ Flips a matrix along it's diagonal.
     |a b|T  |a c|
     |c d| = |b d|
 
-If `A^T = A` the matrix is symmetric.
-If `A^T = A^-1` the matrix is orthogonal.
 -}
 transpose : Float2x2 -> Float2x2
 transpose ( ( a11, a12 ), ( a21, a22 ) ) =
@@ -186,3 +204,25 @@ mulVector ( v1, v2 ) v =
 --    scale (1/(det m)) ((a22, -a12),(-a21,a11))
 --
 --solve ((a11, a12), (a21, a22)) (bx, by) =
+
+
+{-|
+This checks whether `|A - B| < eps`.
+
+    almostEqual eps a b
+
+This is useful for testing, see the tests of this library for how this makes testing easy.
+
+Since any definition of a norm can be used for this, it uses the simple `maxNorm`
+-}
+almostEqual : Float -> Float2x2 -> Float2x2 -> Bool
+almostEqual eps a b =
+    maxNorm (sub a b) <= eps
+
+
+{-| The max norm. This is the biggest element of a matrix.
+Useful for fuzz testing.
+-}
+maxNorm : Float2x2 -> Float
+maxNorm =
+    foldl (\elem acc -> max (abs elem) acc) 0
