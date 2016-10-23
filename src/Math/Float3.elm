@@ -10,6 +10,8 @@ module Math.Float3 exposing (..)
 @docs dot, cross, length, lengthSquared, normalize, directionFormTo, distance, distanceSquared, angle, project, reject
 -}
 
+import Math.Float2 exposing (Vec2)
+
 
 {-| -}
 type alias Float3 =
@@ -28,7 +30,7 @@ type alias Vec3 a =
 {-|
     fromV2 (1,2) 3 == (1,2,3)
 -}
-fromV2 : ( a, a ) -> a -> Vec3 a
+fromV2 : Vec2 a -> a -> Vec3 a
 fromV2 ( x, y ) z =
     ( x, y, z )
 

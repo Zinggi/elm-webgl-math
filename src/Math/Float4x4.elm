@@ -93,14 +93,15 @@ transpose ( ( a11, a12, a13, a14 ), ( a21, a22, a23, a24 ), ( a31, a32, a33, a34
     )
 
 
-det ( ( a11, a12, a13, a14 ), ( a21, a22, a23, a24 ), ( a31, a32, a33, a34 ), ( a41, a42, a43, a44 ) ) =
-    (a11 * M3.det ( ( a22, a23, a24 ), ( a32, a33, a34 ), ( a42, a43, a44 ) ))
-        - (a12 * M3.det ( ( a21, a23, a24 ), ( a31, a33, a34 ), ( a41, a43, a44 ) ))
-        + (a13 * M3.det ( ( a21, a22, a24 ), ( a31, a32, a34 ), ( a41, a42, a44 ) ))
-        - (a14 * M3.det ( ( a22, a23, a24 ), ( a31, a32, a33 ), ( a41, a42, a43 ) ))
 
-
-
+-- I decided not to include the determinant, as the focus of this library is graphics programming
+-- and calculating determinants shouldn't be needed.
+--det ( ( a11, a12, a13, a14 ), ( a21, a22, a23, a24 ), ( a31, a32, a33, a34 ), ( a41, a42, a43, a44 ) ) =
+--    (a11 * M3.det ( ( a22, a23, a24 ), ( a32, a33, a34 ), ( a42, a43, a44 ) ))
+--        - (a12 * M3.det ( ( a21, a23, a24 ), ( a31, a33, a34 ), ( a41, a43, a44 ) ))
+--        + (a13 * M3.det ( ( a21, a22, a24 ), ( a31, a32, a34 ), ( a41, a42, a44 ) ))
+--        - (a14 * M3.det ( ( a22, a23, a24 ), ( a31, a32, a33 ), ( a41, a42, a43 ) ))
+--
 -- # Transformation matrices.
 -- A transformation matrix represents an arbitrary transform on a 3d vector.
 -- To transform a 3d vector v, we multiply it with a 4x4 transformation matrix T.
