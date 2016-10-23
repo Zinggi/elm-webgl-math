@@ -3,7 +3,7 @@ module Math.Float3 exposing (..)
 {-|
 @docs Float3, Vec3
 
-@docs setX, setY, setZ, getX, getY, getZ, map, map2
+@docs fromV2, setX, setY, setZ, getX, getY, getZ, map, map2, foldl, foldr
 
 @docs add, sub, negate, scale, divideBy
 
@@ -83,6 +83,22 @@ map f ( x, y, z ) =
 map2 : (a -> b -> c) -> Vec3 a -> Vec3 b -> Vec3 c
 map2 f ( x1, y1, z1 ) ( x2, y2, z2 ) =
     ( f x1 x2, f y1 y2, f z1 z2 )
+
+
+{-|
+    foldl (*) 1 (2,4,1) == 8
+-}
+foldl : (elem -> acc -> acc) -> acc -> Vec3 elem -> acc
+foldl f start ( x, y, z ) =
+    f z (f y (f x start))
+
+
+{-|
+    foldr max 0 (1,12,-5) == 12
+-}
+foldr : (elem -> acc -> acc) -> acc -> Vec3 elem -> acc
+foldr f start ( x, y, z ) =
+    f x (f y (f z start))
 
 
 

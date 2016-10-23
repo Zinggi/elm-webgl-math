@@ -44,9 +44,9 @@ map2 f =
     V4.map2 (V4.map2 f)
 
 
-fold : (a -> b -> b) -> b -> Mat4x4 a -> b
-fold f init ( m1, m2, m3, m4 ) =
-    (V4.fold f (V4.fold f (V4.fold f (V4.fold f init m1) m2) m3) m4)
+foldl : (a -> b -> b) -> b -> Mat4x4 a -> b
+foldl f init ( m1, m2, m3, m4 ) =
+    (V4.foldl f (V4.foldl f (V4.foldl f (V4.foldl f init m1) m2) m3) m4)
 
 
 add =
@@ -505,4 +505,4 @@ almostEqual eps a b =
 
 
 maxNorm =
-    fold (\elem acc -> max (abs elem) acc) 0
+    foldl (\elem acc -> max (abs elem) acc) 0

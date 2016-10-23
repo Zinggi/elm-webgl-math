@@ -3,7 +3,7 @@ module Math.Float2 exposing (..)
 {-|
 @docs Float2, Vec2
 
-@docs setX, setY, getX, getY, map, map2
+@docs setX, setY, getX, getY, map, map2, foldl, foldr
 
 @docs add, sub, negate, scale, divideBy
 
@@ -63,6 +63,22 @@ map f ( x, y ) =
 map2 : (a -> b -> c) -> Vec2 a -> Vec2 b -> Vec2 c
 map2 op ( x1, y1 ) ( x2, y2 ) =
     ( op x1 x2, op y1 y2 )
+
+
+{-|
+    foldl (+) 0 (2,4) == 6
+-}
+foldl : (elem -> acc -> acc) -> acc -> Vec2 elem -> acc
+foldl f start ( x, y ) =
+    f y (f x start)
+
+
+{-|
+    foldr (-) 0 (1,12) == -11
+-}
+foldr : (elem -> acc -> acc) -> acc -> Vec2 elem -> acc
+foldr f start ( x, y ) =
+    f x (f y start)
 
 
 
