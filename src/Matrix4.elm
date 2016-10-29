@@ -1,4 +1,4 @@
-module Math.Float4x4 exposing (..)
+module Matrix4 exposing (..)
 
 {-| This module deals mostly with 3D transformation matrices.
 
@@ -12,7 +12,7 @@ http://www.codinglabs.net/article_world_view_projection_matrix.aspx
 http://www.euclideanspace.com/maths/geometry/affine/index.htm
 
 
-@docs Float4x4, Mat4x4
+@docs Float4x4, Mat4
 
 ## General operations
 
@@ -80,9 +80,8 @@ Math heavy reference: http://www.songho.ca/opengl/gl_projectionmatrix.html
 
 -}
 
-import Math.Float4 as V4 exposing (Float4, Vec4)
-import Math.Float3 as V3 exposing (Float3, Vec3)
-import Math.Float3x3 as M3
+import Vector4 as V4 exposing (Float4, Vec4)
+import Vector3 as V3 exposing (Float3, Vec3)
 
 
 -- Useful references:
@@ -93,13 +92,13 @@ import Math.Float3x3 as M3
 
 
 {-| -}
-type alias Float4x4 =
-    Mat4x4 Float
+type alias Mat4 a =
+    ( Vec4 a, Vec4 a, Vec4 a, Vec4 a )
 
 
 {-| -}
-type alias Mat4x4 a =
-    ( Vec4 a, Vec4 a, Vec4 a, Vec4 a )
+type alias Float4x4 =
+    Mat4 Float
 
 
 
@@ -107,25 +106,25 @@ type alias Mat4x4 a =
 
 
 {-| -}
-map : (a -> b) -> Mat4x4 a -> Mat4x4 b
+map : (a -> b) -> Mat4 a -> Mat4 b
 map f =
     V4.map (V4.map f)
 
 
 {-| -}
-map2 : (a -> b -> c) -> Mat4x4 a -> Mat4x4 b -> Mat4x4 c
+map2 : (a -> b -> c) -> Mat4 a -> Mat4 b -> Mat4 c
 map2 f =
     V4.map2 (V4.map2 f)
 
 
 {-| -}
-foldl : (elem -> acc -> acc) -> acc -> Mat4x4 elem -> acc
+foldl : (elem -> acc -> acc) -> acc -> Mat4 elem -> acc
 foldl f init ( m1, m2, m3, m4 ) =
     (V4.foldl f (V4.foldl f (V4.foldl f (V4.foldl f init m1) m2) m3) m4)
 
 
 {-| -}
-foldr : (elem -> acc -> acc) -> acc -> Mat4x4 elem -> acc
+foldr : (elem -> acc -> acc) -> acc -> Mat4 elem -> acc
 foldr f init ( m1, m2, m3, m4 ) =
     V4.foldr f (V4.foldr f (V4.foldr f (V4.foldr f init m4) m3) m2) m1
 
@@ -260,6 +259,13 @@ mulVector ( r1, r2, r3, r4 ) v =
 -- Transformations
 
 
+{-| Transform a vector by an arbitrary transformation matrix.
+In math terms, we do:
+
+    |v'| = A*|v|  v'/w
+    |w |     |1|,
+
+-}
 transform : Float4x4 -> Float3 -> Float3
 transform ( ( a11, a12, a13, a14 ), ( a21, a22, a23, a24 ), ( a31, a32, a33, a34 ), ( a41, a42, a43, a44 ) ) ( x, y, z ) =
     let

@@ -1,11 +1,9 @@
 module Float2 exposing (all)
 
-import Fuzz exposing (..)
 import Helper exposing (..)
 import Test exposing (..)
-import Expect
 import Math.Vector2 as Ref
-import Math.Float2 as V
+import Vector2 as V
 
 
 f2 =

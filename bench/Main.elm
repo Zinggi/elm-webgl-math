@@ -2,13 +2,12 @@ module Main exposing (main)
 
 import Benchmark
 import Benchmark.Program
-import Html.App
 import Math.Vector4 as RefV4 exposing (vec4)
 import Math.Vector3 as RefV3 exposing (vec3)
 import Math.Matrix4 as RefM4
-import Math.Float4 as V4
-import Math.Float3 as V3
-import Math.Float4x4 as M4
+import Vector4 as V4
+import Vector3 as V3
+import Matrix4 as M4
 
 
 main : Program Never

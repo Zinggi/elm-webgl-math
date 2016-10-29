@@ -4,7 +4,7 @@ import Fuzz exposing (..)
 import Helper exposing (..)
 import Test exposing (..)
 import Expect
-import Math.Float4x4 as V
+import Matrix4 as V
 
 
 all =

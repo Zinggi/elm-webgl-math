@@ -1,4 +1,4 @@
-module Math.Float4 exposing (..)
+module Vector4 exposing (..)
 
 {-|
 @docs Float4, Vec4
@@ -7,20 +7,20 @@ module Math.Float4 exposing (..)
 
 @docs add, sub, negate, scale, divideBy
 
-@docs dot, length, lengthSquared, normalize, directionFormTo, distance, distanceSquared, angle
+@docs dot, length, lengthSquared, normalize, directionFromTo, distance, distanceSquared, angle
 -}
 
-import Math.Float3 exposing (Vec3)
-
-
-{-| -}
-type alias Float4 =
-    Vec4 Float
+import Vector3 exposing (Vec3)
 
 
 {-| -}
 type alias Vec4 a =
     ( a, a, a, a )
+
+
+{-| -}
+type alias Float4 =
+    Vec4 Float
 
 
 

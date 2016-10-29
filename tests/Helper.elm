@@ -4,10 +4,10 @@ import Math.Vector2 as Ref2
 import Math.Vector3 as Ref3 exposing (vec3)
 import Math.Vector4 as Ref4
 import Math.Matrix4 as RefM4
-import Math.Float2 as V2
-import Math.Float3 as V3
-import Math.Float4 as V4
-import Math.Float4x4 as M4
+import Vector2 as V2
+import Vector3 as V3
+import Vector4 as V4
+import Matrix4 as M4
 import Fuzz exposing (Fuzzer)
 import Expect
 

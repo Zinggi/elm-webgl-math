@@ -5,7 +5,7 @@ import Helper exposing (..)
 import Test exposing (..)
 import Expect
 import Math.Vector3 as Ref
-import Math.Float3 as V
+import Vector3 as V
 
 
 f2 =

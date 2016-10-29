@@ -1,4 +1,4 @@
-module Math.Float2 exposing (..)
+module Vector2 exposing (..)
 
 {-|
 @docs Float2, Vec2
@@ -7,18 +7,18 @@ module Math.Float2 exposing (..)
 
 @docs add, sub, negate, scale, divideBy
 
-@docs dot, length, lengthSquared, normalize, directionFormTo, distance, distanceSquared, angle, project, reject
+@docs dot, length, lengthSquared, normalize, directionFromTo, distance, distanceSquared, angle, project, reject
 -}
-
-
-{-| -}
-type alias Float2 =
-    Vec2 Float
 
 
 {-| -}
 type alias Vec2 a =
     ( a, a )
+
+
+{-| -}
+type alias Float2 =
+    Vec2 Float
 
 
 

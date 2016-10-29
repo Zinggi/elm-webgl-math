@@ -1,4 +1,4 @@
-module Math.Float2x2 exposing (..)
+module Matrix2 exposing (..)
 
 {-|
 
@@ -13,7 +13,7 @@ Would be
 
 in Elm.
 
-@docs Float2x2, Mat2x2
+@docs Float2x2, Mat2
 
 ## General operations
 
@@ -31,23 +31,23 @@ in Elm.
 
 -}
 
-import Math.Float2 as V2 exposing (Float2, Vec2)
+import Vector2 as V2 exposing (Float2, Vec2)
+
+
+{-| -}
+type alias Mat2 a =
+    ( Vec2 a, Vec2 a )
 
 
 {-| -}
 type alias Float2x2 =
-    Mat2x2 Float
-
-
-{-| -}
-type alias Mat2x2 a =
-    ( Vec2 a, Vec2 a )
+    Mat2 Float
 
 
 {-|
     elementsSquared = map (\x -> x^2)
 -}
-map : (a -> b) -> Mat2x2 a -> Mat2x2 b
+map : (a -> b) -> Mat2 a -> Mat2 b
 map f =
     V2.map (V2.map f)
 
@@ -55,19 +55,19 @@ map f =
 {-|
     elementWiseDivision = map2 (/)
 -}
-map2 : (a -> b -> c) -> Mat2x2 a -> Mat2x2 b -> Mat2x2 c
+map2 : (a -> b -> c) -> Mat2 a -> Mat2 b -> Mat2 c
 map2 f =
     V2.map2 (V2.map2 f)
 
 
 {-| -}
-foldl : (elem -> acc -> acc) -> acc -> Mat2x2 elem -> acc
+foldl : (elem -> acc -> acc) -> acc -> Mat2 elem -> acc
 foldl f init ( r1, r2 ) =
     V2.foldl f (V2.foldl f init r1) r2
 
 
 {-| -}
-foldr : (elem -> acc -> acc) -> acc -> Mat2x2 elem -> acc
+foldr : (elem -> acc -> acc) -> acc -> Mat2 elem -> acc
 foldr f init ( r1, r2 ) =
     V2.foldr f (V2.foldr f init r2) r1
 

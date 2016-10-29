@@ -1,6 +1,60 @@
-# elm-linear-algebra
+# elm-webgl-math
 
-This is not ready yet, it needs more test to make sure I didn't screw up somewhere and also more benchmarks.
+**This is not ready yet, it needs more test to make sure I didn't screw up somewhere and also more benchmarks.**
+
+This library provides functions for working with 2D and 3D vectors.
+It includes standard vector and matrix math operations, transformations and camera projections.
+
+## Overview
+
+### Modules and Types
+
+The library is organised in `VectorN` and `MatrixN` modules.
+
+Each module contains a more general type (`VecN a or MatN a`) with a limited set of functions to work with them and a specialized type (`FloatN or FloatNxN`) that only works with `Float`s with many functions to work with them.
+All these types are just type aliases for tuples.
+
+All modules and types:
+```elm
+import Vector2 as V2 exposing (Vec2, Float2)
+import Vector3 as V3 exposing (Vec3, Float3)
+import Vector4 as V4 exposing (Vec4, Float4)
+import Matrix2 as M2 exposing (Mat2, Float2x2)
+import Matrix3 as M3 exposing (Mat3, Float3x3)
+import Matrix4 as M4 exposing (Mat4, Float4x4)
+```
+
+### Usage
+```elm
+aVector : Float4
+aVector =
+    (12, 2, 4, 1)
+
+aMatrix : Float4x4
+aMatrix =
+    ( (2, 0, 0, 2)
+    , (0, 2, 0, 1)
+    , (0, 0, 2, 3)
+    , (0, 0, 0, 1)
+    )
+
+transformedVector : Float4
+transformedVector =
+    M4.transform aMatrix aVector    -- result: (26, 5, 7, 1)
+
+--
+-- The same, but much easier:
+--
+
+transformedVector2 : Float3
+transformedVector2 =
+    (12, 2, 4)
+    |> M4.scale 2
+    |> M4.translate (2, 1, 3)       -- result: (26, 5, 7)
+```
+
+
+
 
 ## Plan
 This is meant as a replacement for **elm-community/elm-linear-algebra**.
@@ -22,12 +76,8 @@ This is meant as a replacement for **elm-community/elm-linear-algebra**.
 This needs to be explored more, but first results look very promising.
 Matrix multiplication is just as fast as in *elm-community/elm-linear-algebra* and some more complicated examples are much faster because we can directly construct matrices.
 
-These results are from my laptop, try for yourself!
+Run the benchmark for yourself!  
 [Here](https://zinggi.github.io/elm-linear-algebra/)/[src](/bench)
 
-My library is:
- * **Just as fast as** elm-community for matrix multiplication
- * ~**2.7x** faster for vector addition and scaling 
- * ~**2.5x** faster for creating transformation matrices
-     - **1.5x** faster if using the same algorithm as elm-community
- * ~**2x** faster for transforming vectors
+My library seems to be slightly faster on Chrome, much faster on Firefox, faster on Edge, and slightly slower on Safari.
+If your results are completely different, please post them to https://github.com/Zinggi/elm-linear-algebra/issues/2
