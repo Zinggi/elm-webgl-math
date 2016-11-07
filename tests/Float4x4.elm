@@ -5,11 +5,22 @@ import Helper exposing (..)
 import Test exposing (..)
 import Expect
 import Matrix4 as V
+import Vector3 as V3
 
 
 all =
     describe "Float4x4"
-        [ add, minus, mul, transpose, translate, transform, makeTransform, inverseRigidBodyTransform ]
+        [ add
+        , minus
+        , mul
+        , transpose
+        , translate
+        , transform
+        , makeTransform
+        , inverseRigidBodyTransform
+        , makeLookAt1
+        , makeLookAt2
+        ]
 
 
 
@@ -69,22 +80,41 @@ transform =
 
 
 inverseRigidBodyTransform =
-    Test.fuzzWith { runs = 20 }
-        --fuzz
+    Test.fuzz
         m4rigidBody
-        "inverseRigidBodyTransform"
+        "expect inverseRigidBodyTransform * the original transform to be identity"
         (\m4 ->
             expectAlmostEqualM4 (V.mul (V.inverseRigidBodyTransform m4) m4) (V.identity)
         )
 
 
 makeTransform =
-    Test.fuzzWith { runs = 20 }
+    Test.fuzz
         (Fuzz.tuple4 ( v3, v3NonZero, smallFloat, v3NonZero ))
         "makeTransform"
         (\( t, s, r, a ) ->
             expectAlmostEqualM4 (V.makeTransform t s r a ( 0, 0, 0 ))
                 (V.mul (V.makeTranslate t) (V.mul (V.makeRotate r a) (V.makeScale s)))
+        )
+
+
+makeLookAt1 =
+    --M4.makeLookAt cameraPosition target (0, 1, 0)
+    fuzz (Fuzz.tuple ( v3NonZero, v3NonZero ))
+        "makeLookAt should not move the eye position"
+        (\( v, w ) ->
+            Expect.equal ( 0, 0, 0 )
+                (V.transform (V.makeLookAt v w ( 0, 1, 0 )) v)
+        )
+
+
+makeLookAt2 =
+    --M4.makeLookAt cameraPosition target (0, 1, 0)
+    fuzz (Fuzz.tuple ( v3NonZero, v3NonZero ))
+        "makeLookAt should not scale"
+        (\( v, w ) ->
+            expectAlmostEqual (V3.length v)
+                (V3.length <| V.transform (V.makeLookAt v w ( 0, 1, 0 )) ( 0, 0, 0 ))
         )
 
 
