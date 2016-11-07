@@ -9,10 +9,10 @@ It includes standard vector and matrix math operations, transformations and came
 
 ### Modules and Types
 
-The library is organised in `VectorN` and `MatrixN` modules.
+The library is organised in `VectorN` and `MatrixN` modules.  
 
 Each module contains a more general type (`VecN a or MatN a`) with a limited set of functions to work with them and a specialized type (`FloatN or FloatNxN`) that only works with `Float`s with many functions to work with them.
-All these types are just type aliases for tuples.
+All these types are just type aliases for tuples.  
 
 All modules and types:
 ```elm
@@ -69,8 +69,8 @@ Would be
 
 in Elm.
 
-Generally, `a, b, c, ...` and `x, y, z` are usually **scalar** values.
-`v, w` are usually **vectors**.
+Generally, `a, b, c, ...` and `x, y, z` are usually **scalar** values.  
+`v, w` are usually **vectors**.  
 `A, B, C, ..` are usually **matrices**, `S, T, R` are **scale**, **translate** and **rotation** matrices.
 
 
@@ -96,7 +96,7 @@ This needs to be explored more, but first results look very promising.
 Matrix multiplication is just as fast as in *elm-community/elm-linear-algebra* and some more complicated examples are much faster because we can directly construct matrices.
 
 Run the benchmark for yourself!  
-[Here](https://zinggi.github.io/elm-linear-algebra/)/[src](/bench)
+[Here](https://zinggi.github.io/elm-webgl-math/)/[src](/bench)
 
 My library seems to be slightly faster on Chrome, much faster on Firefox, faster on Edge, and slightly slower on Safari.
-If your results are completely different, please post them to https://github.com/Zinggi/elm-linear-algebra/issues/2
+If your results are completely different, please post them to https://github.com/Zinggi/elm-webgl-math/issues/2
