@@ -27,7 +27,7 @@ http://www.euclideanspace.com/maths/geometry/affine/index.htm
 
 ## Transformation matrices
 A transformation matrix represents an arbitrary transform on a 3d vector.
-To transform a 3d vector v, we multiply it with a 4x4 transformation matrix T.
+To transform a 3d vector v, we multiply it with a 4x4 transformation matrix M.
 To do that we need to write v in homogeneous coordinates,
 then transform the result back to normal coordinates.
 
@@ -53,10 +53,19 @@ These are composed of a 3x3 rotation and scale matrix M and a translation vector
    |M t|
    |0 1|
 
-@docs makeRotate, rotate
-@docs makeScale, scale
-@docs makeTranslate, translate
-@docs makeTransform, transformBy, makeLookAt, makeBasis
+@docs makeRotate, makeScale, makeTranslate, makeTransform
+@docs rotate, scale, translate, transformBy
+
+TODO: does it make sense for these to be post multiplied?
+    This means that currently these operations will be done before doing the transform,
+    meaning they will act as local transformations.
+
+    However this makes creating a composed transformation weird,
+    as the order of operations might be counter-intuitive!
+    E.g. `identity |> translate |> rotate` actually corresponds to `I*T*R`
+    which means rotate first, then translate.
+
+@docs makeLookAt, makeBasis
 
 #### Operations on affine transforms
 These can speed up some calculations, but are only correct if actually used with affine transforms.

@@ -40,19 +40,38 @@ aMatrix =
 
 transformedVector : Float4
 transformedVector =
-    M4.transform aMatrix aVector    -- result: (26, 5, 7, 1)
+    M4.mulVector aMatrix aVector    -- result: (26, 5, 11, 1)
 
 --
 -- The same, but much easier:
 --
 
-transformedVector2 : Float3
 transformedVector2 =
-    (12, 2, 4)
-    |> M4.scale 2
-    |> M4.translate (2, 1, 3)       -- result: (26, 5, 7)
+    let
+        transform =
+            M4.makeTranslate ( 2, 1, 3 )
+                |> M4.scale ( 2, 2, 2 )
+    in
+        ( 12, 2, 4 )
+            |> M4.transform transform -- result: (26, 5, 11)
 ```
 
+
+### Notes on ascii math
+In the documentation, instead of code samples I sometimes use ascii math notation, as it is more compact.
+
+        |a b| |x|
+    A = |c d|*|y|
+
+Would be
+
+    ma = mulVector ((a,b),(c,d)) (x,y)
+
+in Elm.
+
+Generally, `a, b, c, ...` and `x, y, z` are usually **scalar** values.
+`v, w` are usually **vectors**.
+`A, B, C, ..` are usually **matrices**, `S, T, R` are **scale**, **translate** and **rotation** matrices.
 
 
 

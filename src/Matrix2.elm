@@ -1,18 +1,6 @@
 module Matrix2 exposing (..)
 
 {-|
-
-In this documentation, instead of code samples I sometimes use ascii math notation, as it is more compact.
-
-        |a b| |x|
-    A = |c d|*|y|
-
-Would be
-
-    ma = mulVector ((a,b),(c,d)) (x,y)
-
-in Elm.
-
 @docs Float2x2, Mat2
 
 ## General operations
