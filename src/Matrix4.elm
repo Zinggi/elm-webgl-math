@@ -458,9 +458,9 @@ The up vector is usually (0, 1, 0), e.g. the y-axis. (some people also use the z
 makeLookAt : Float3 -> Float3 -> Float3 -> Float4x4
 makeLookAt eye target up =
     -- the math goes like this:
-    -- z (forward) = norm(target - eye)
-    -- x (right) = norm(z cross up)
-    -- y (up) = norm(x cross z)
+    -- z (forward) = norm(eye - target)
+    -- x (right) = norm(up cross z)
+    -- y (up) = norm(z cross x)
     --
     -- create a new basis for this transformation
     -- bc =|      0|
@@ -481,13 +481,13 @@ makeLookAt eye target up =
     --
     let
         (( z0, z1, z2 ) as z) =
-            V3.normalize (V3.sub target eye)
+            V3.normalize (V3.sub eye target)
 
         (( x0, x1, x2 ) as x) =
-            V3.normalize (V3.cross z up)
+            V3.normalize (V3.cross up z)
 
         (( y0, y1, y2 ) as y) =
-            V3.normalize (V3.cross x z)
+            V3.normalize (V3.cross z x)
     in
         ( ( x0, x1, x2, -(V3.dot x eye) )
         , ( y0, y1, y2, -(V3.dot y eye) )
