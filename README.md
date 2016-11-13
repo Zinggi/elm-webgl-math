@@ -1,9 +1,9 @@
-# elm-webgl-math
-
-**This is not ready yet, it needs more test to make sure I didn't screw up somewhere and also more benchmarks.**
+# webgl-math
 
 This library provides functions for working with 2D and 3D vectors.
 It includes standard vector and matrix math operations, transformations and camera projections.
+
+Despite being named webgl-math, you can't directly use the types from this library with webgl. If you want to use this library with webgl, you need to convert these types with [this library (not released yet)]().
 
 ## Overview
 
@@ -99,4 +99,4 @@ Run the benchmark for yourself!
 [Here](https://zinggi.github.io/elm-webgl-math/)/[src](/bench)
 
 My library seems to be slightly faster on Chrome, much faster on Firefox, faster on Edge, and slightly slower on Safari.
-If your results are completely different, please post them to https://github.com/Zinggi/elm-webgl-math/issues/2
+If your results are completely different, please post them [here](https://github.com/Zinggi/elm-webgl-math/issues/2).
