@@ -50,10 +50,8 @@ Means that `v` will be scaled by the matrix `S`, then rotated by `R` and finally
 These represent a transform that preserves shapes, e.g. translations, rotations and scaling.
 These are composed of a 3x3 rotation and scale matrix M and a translation vector t:
 
-   |M t|
-   |0 1|
-
-.
+    |M t|
+    |0 1|
 
 @docs makeRotate, makeScale, makeTranslate, makeTransform
 @docs rotate, scale, translate, transformBy
