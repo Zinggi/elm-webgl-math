@@ -53,6 +53,7 @@ These are composed of a 3x3 rotation and scale matrix M and a translation vector
    |M t|
    |0 1|
 
+.
 
 @docs makeRotate, makeScale, makeTranslate, makeTransform
 @docs rotate, scale, translate, transformBy

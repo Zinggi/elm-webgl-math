@@ -3,7 +3,7 @@
 This library provides functions for working with 2D and 3D vectors.
 It includes standard vector and matrix math operations, transformations and camera projections.
 
-Despite being named webgl-math, you can't directly use the types from this library with webgl. If you want to use this library with webgl, you need to convert these types with [this library (not released yet)]().
+Despite being named webgl-math, you can't directly use the types from this library with webgl. If you want to use this library with webgl, you need to convert these types with [this library](https://github.com/Zinggi/elm-webgl-types) (not published yet, as it is a native library).
 
 ## Overview
 
