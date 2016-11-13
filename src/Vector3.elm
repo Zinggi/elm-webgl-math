@@ -155,7 +155,9 @@ divideBy a ( x, y, z ) =
 {-| `v dot w`
 
 The **dot product** of two vectors. Also called **scalar product** or **inner product**.
+
 It links the length and angle of two vectors.
+
 `v dot w = |v|*|w|*cos(phi)`
 
     dot (1,2,2) (3,3,2) == 1*3 + 2*3 + 2*2 == 13
@@ -168,10 +170,12 @@ dot ( x1, y1, z1 ) ( x2, y2, z2 ) =
 {-| `v cross w`
 
 The **cross product** of two vectors. Also called **vector product**.
+
 `v cross w` is a vector that is perpendicular to both `v` and `w`
 and therefore normal to the plane containing them.
 
-The length of `v cross w` is equal to the area of the parallelogram spanned by `v` and `w`
+The length of `v cross w` is equal to the area of the parallelogram spanned by `v` and `w`.
+
 `|v cross w| = |v|*|w|*sin(phi)`
 
     cross (2,1,3) (4,5,-3) == (1*(-3) - 3*5, 3*4 - 2*(-3), 2*5 - 1*4) == (-18, 18, 6)

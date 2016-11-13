@@ -53,13 +53,13 @@ These are composed of a 3x3 rotation and scale matrix M and a translation vector
    |M t|
    |0 1|
 
+
 @docs makeRotate, makeScale, makeTranslate, makeTransform
 @docs rotate, scale, translate, transformBy
 
 TODO: does it make sense for these to be post multiplied?
     This means that currently these operations will be done before doing the transform,
     meaning they will act as local transformations.
-
     However this makes creating a composed transformation weird,
     as the order of operations might be counter-intuitive!
     E.g. `identity |> translate |> rotate` actually corresponds to `I*T*R`

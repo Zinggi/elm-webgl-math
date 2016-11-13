@@ -53,28 +53,28 @@ map2 f =
     V3.map2 (V3.map2 f)
 
 
-{-| A + B
+{-| `A + B`
 -}
 add : Float3x3 -> Float3x3 -> Float3x3
 add =
     map2 (+)
 
 
-{-| A - B
+{-| `A - B`
 -}
 sub : Float3x3 -> Float3x3 -> Float3x3
 sub =
     map2 (-)
 
 
-{-| A .* B
+{-| `A .* B`
 -}
 elementWiseMul : Float3x3 -> Float3x3 -> Float3x3
 elementWiseMul =
     map2 (*)
 
 
-{-| A*B
+{-| `A*B`
 -}
 mul : Float3x3 -> Float3x3 -> Float3x3
 mul ( ( a11, a12, a13 ), ( a21, a22, a23 ), ( a31, a32, a33 ) ) ( ( b11, b12, b13 ), ( b21, b22, b23 ), ( b31, b32, b33 ) ) =
@@ -84,7 +84,7 @@ mul ( ( a11, a12, a13 ), ( a21, a22, a23 ), ( a31, a32, a33 ) ) ( ( b11, b12, b1
     )
 
 
-{-| A^T
+{-| `A^T`
 -}
 transpose : Float3x3 -> Float3x3
 transpose ( ( a11, a12, a13 ), ( a21, a22, a23 ), ( a31, a32, a33 ) ) =
@@ -102,14 +102,15 @@ transpose ( ( a11, a12, a13 ), ( a21, a22, a23 ), ( a31, a32, a33 ) ) =
 --    a11 * (a22 * a33 - a23 * a32) - a12 * (a21 * a33 - a23 * a31) + a13 * (a21 * a32 - a22 * a31)
 
 
-{-| A*v
+{-| `A*v`
 -}
 mulVector : Float3x3 -> Float3 -> Float3
 mulVector ( v1, v2, v3 ) v =
     ( V3.dot v1 v, V3.dot v2 v, V3.dot v3 v )
 
 
-{-| |v'| = A*|v|  v'/w
+{-|
+    |v'| = A*|v|  v'/w
     |w |     |1|,
 -}
 transform : Float3x3 -> Float2 -> Float2

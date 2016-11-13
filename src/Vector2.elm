@@ -133,7 +133,9 @@ divideBy a ( x, y ) =
 {-| `v dot w`
 
 The **dot product** of two vectors. Also called **scalar product** or **inner product**.
+
 It links the length and angle of two vectors.
+
 `v dot w = |v|*|w|*cos(phi)`
 
     dot (1,2) (3,2) == 1*3 + 2*2 == 7
