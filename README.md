@@ -1,5 +1,9 @@
 # webgl-math
 
+TODO:
+    upgrade to elm 0.18.
+    tests need html-test-runner
+
 This library provides functions for working with 2D and 3D vectors.
 It includes standard vector and matrix math operations, transformations and camera projections.
 
