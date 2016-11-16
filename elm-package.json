@@ -1,5 +1,5 @@
 {
-    "version": "1.0.3",
+    "version": "1.0.4",
     "summary": "Vector and matrix library for 3D and 2D math",
     "repository": "https://github.com/Zinggi/elm-webgl-math.git",
     "license": "BSD3",
