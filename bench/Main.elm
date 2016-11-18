@@ -1,7 +1,7 @@
 module Main exposing (main)
 
 import Benchmark
-import Benchmark.Program
+import Benchmark.Program as Benchmark
 import Math.Vector4 as RefV4 exposing (vec4)
 import Math.Vector3 as RefV3 exposing (vec3)
 import Math.Matrix4 as RefM4
@@ -10,9 +10,9 @@ import Vector3 as V3
 import Matrix4 as M4
 
 
-main : Program Never
+main : Benchmark.Program
 main =
-    Benchmark.Program.program <|
+    Benchmark.program <|
         List.concat
             [ [ pow 1000
               , pow 10000
