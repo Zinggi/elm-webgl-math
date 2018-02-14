@@ -1,6 +1,7 @@
 module Vector3 exposing (..)
 
 {-|
+
 @docs Float3, Vec3
 
 @docs fromV2, setX, setY, setZ, getX, getY, getZ, map, map2, foldl, foldr
@@ -8,6 +9,7 @@ module Vector3 exposing (..)
 @docs add, sub, negate, scale, divideBy
 
 @docs dot, cross, length, lengthSquared, normalize, directionFromTo, distance, distanceSquared, angle, project, reject
+
 -}
 
 import Vector2 exposing (Vec2)
@@ -28,7 +30,9 @@ type alias Float3 =
 
 
 {-|
+
     fromV2 (1,2) 3 == (1,2,3)
+
 -}
 fromV2 : Vec2 a -> a -> Vec3 a
 fromV2 ( x, y ) z =
@@ -72,7 +76,9 @@ setZ a ( x, y, z ) =
 
 
 {-|
+
     map sqrt (1,4,9) == (1,2,3)
+
 -}
 map : (a -> b) -> Vec3 a -> Vec3 b
 map f ( x, y, z ) =
@@ -80,7 +86,9 @@ map f ( x, y, z ) =
 
 
 {-|
+
     map2 (/) (4,9,12) (2,3,4) == (2,3,3)
+
 -}
 map2 : (a -> b -> c) -> Vec3 a -> Vec3 b -> Vec3 c
 map2 f ( x1, y1, z1 ) ( x2, y2, z2 ) =
@@ -88,7 +96,9 @@ map2 f ( x1, y1, z1 ) ( x2, y2, z2 ) =
 
 
 {-|
+
     foldl (*) 1 (2,4,1) == 8
+
 -}
 foldl : (elem -> acc -> acc) -> acc -> Vec3 elem -> acc
 foldl f start ( x, y, z ) =
@@ -96,7 +106,9 @@ foldl f start ( x, y, z ) =
 
 
 {-|
+
     foldr max 0 (1,12,-5) == 12
+
 -}
 foldr : (elem -> acc -> acc) -> acc -> Vec3 elem -> acc
 foldr f start ( x, y, z ) =
@@ -110,6 +122,7 @@ foldr f start ( x, y, z ) =
 {-| `v + w`
 
     add (2,4,1) (3,-6,2) == (5,-2,3)
+
 -}
 add : Float3 -> Float3 -> Float3
 add ( x1, y1, z1 ) ( x2, y2, z2 ) =
@@ -119,6 +132,7 @@ add ( x1, y1, z1 ) ( x2, y2, z2 ) =
 {-| `v - w`
 
     sub (4,6,1) (3,-1,-4) == (1,7,5)
+
 -}
 sub : Float3 -> Float3 -> Float3
 sub ( x1, y1, z1 ) ( x2, y2, z2 ) =
@@ -128,6 +142,7 @@ sub ( x1, y1, z1 ) ( x2, y2, z2 ) =
 {-| `-v`
 
     negate (2,-1,5) == (-2,1,-5)
+
 -}
 negate : Float3 -> Float3
 negate ( x, y, z ) =
@@ -137,6 +152,7 @@ negate ( x, y, z ) =
 {-| `a*v`
 
     scale (1/2) (4,2,6) == (2,1,3)
+
 -}
 scale : Float -> Float3 -> Float3
 scale a ( x, y, z ) =
@@ -146,6 +162,7 @@ scale a ( x, y, z ) =
 {-| `v/a`
 
     divideBy (1/2) (2,1,3) == (4,2,6)
+
 -}
 divideBy : Float -> Float3 -> Float3
 divideBy a ( x, y, z ) =
@@ -161,6 +178,7 @@ It links the length and angle of two vectors.
 `v dot w = |v|*|w|*cos(phi)`
 
     dot (1,2,2) (3,3,2) == 1*3 + 2*3 + 2*2 == 13
+
 -}
 dot : Float3 -> Float3 -> Float
 dot ( x1, y1, z1 ) ( x2, y2, z2 ) =
@@ -179,6 +197,7 @@ The length of `v cross w` is equal to the area of the parallelogram spanned by `
 `|v cross w| = |v|*|w|*sin(phi)`
 
     cross (2,1,3) (4,5,-3) == (1*(-3) - 3*5, 3*4 - 2*(-3), 2*5 - 1*4) == (-18, 18, 6)
+
 -}
 cross : Float3 -> Float3 -> Float3
 cross ( x1, y1, z1 ) ( x2, y2, z2 ) =
@@ -190,6 +209,7 @@ cross ( x1, y1, z1 ) ( x2, y2, z2 ) =
 `|v| = sqrt(v dot v)`
 
     length (4,2,4) == sqrt (4^2+2^2+4^2) == 6
+
 -}
 length : Float3 -> Float
 length v =
@@ -202,6 +222,7 @@ so if you only need to compare lengths you can use this instead of the length.
 `|v|^2 = v dot w`
 
     lengthSquared (3,4,1) == 3^2+4^2+1^2 == 26
+
 -}
 lengthSquared : Float3 -> Float
 lengthSquared v =
@@ -213,10 +234,14 @@ lengthSquared v =
 `v/|v|`
 
     normalize (4,2,4) == (2/3,1/3,2/3)
+
 -}
 normalize : Float3 -> Float3
 normalize v =
-    divideBy (length v) v
+    if length v == 0 then
+        v
+    else
+        divideBy (length v) v
 
 
 {-| The projection of `v` onto `w`.
@@ -224,6 +249,7 @@ normalize v =
 `(v dot w)/|w| * w/|w|`
 
     project (2,1,0) (4,0,0) == (2,0,0)
+
 -}
 project : Float3 -> Float3 -> Float3
 project v w =
@@ -231,7 +257,7 @@ project v w =
         l_w =
             lengthSquared w
     in
-        scale ((dot v w) / l_w) w
+    scale (dot v w / l_w) w
 
 
 {-| The rejection of `v` onto `w`. This is always perpendicular to the projection.
@@ -239,6 +265,7 @@ project v w =
 `v - (project v w)`
 
     reject (2,1,0) (4,0,0) == (0,1,0)
+
 -}
 reject : Float3 -> Float3 -> Float3
 reject v w =
@@ -250,6 +277,7 @@ reject v w =
 `(w - v)/|w - v|`
 
     directionFromTo (5,1,2) (9,3,6) == (2/3,1/3,2/3)
+
 -}
 directionFromTo : Float3 -> Float3 -> Float3
 directionFromTo a b =
@@ -261,6 +289,7 @@ directionFromTo a b =
 `|v - w| = |w - v|`
 
     distance (2,0,4) (0,4,0) == 6
+
 -}
 distance : Float3 -> Float3 -> Float
 distance a b =
@@ -272,6 +301,7 @@ distance a b =
 `|v - w|^2`
 
     distanceSquared (3,0,2) (0,4,1) == 26
+
 -}
 distanceSquared : Float3 -> Float3 -> Float
 distanceSquared a b =
@@ -283,6 +313,7 @@ distanceSquared a b =
 `acos((v dot w)/(|v|*|w|))`
 
     angle (-1,-1,2) (2,2,2) == pi/2    -- or 90°
+
 -}
 angle : Float3 -> Float3 -> Float
 angle a b =
@@ -290,7 +321,7 @@ angle a b =
         r =
             dot a b / (length a * length b)
     in
-        if r >= 1 then
-            0
-        else
-            acos r
+    if r >= 1 then
+        0
+    else
+        acos r

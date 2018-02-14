@@ -1,6 +1,7 @@
 module Vector4 exposing (..)
 
 {-|
+
 @docs Float4, Vec4
 
 @docs fromV3, setX, setY, setZ, setW, getX, getY, getZ, getW, map, map2, foldl, foldr
@@ -8,6 +9,7 @@ module Vector4 exposing (..)
 @docs add, sub, negate, scale, divideBy
 
 @docs dot, length, lengthSquared, normalize, directionFromTo, distance, distanceSquared, angle
+
 -}
 
 import Vector3 exposing (Vec3)
@@ -28,7 +30,9 @@ type alias Float4 =
 
 
 {-|
+
     fromV3 (1,2,3) 1 == (1,2,3,1)
+
 -}
 fromV3 : Vec3 a -> a -> Vec4 a
 fromV3 ( x, y, z ) w =
@@ -84,7 +88,9 @@ setW a ( x, y, z, w ) =
 
 
 {-|
+
     map (\x -> x^2) (1,2,3,4) == (1,4,9,16)
+
 -}
 map : (a -> b) -> Vec4 a -> Vec4 b
 map f ( x, y, z, w ) =
@@ -92,7 +98,9 @@ map f ( x, y, z, w ) =
 
 
 {-|
+
     map2 (<) (2,1,4,2) (3,2,1,6) == (True, True, False, True)
+
 -}
 map2 : (a -> b -> c) -> Vec4 a -> Vec4 b -> Vec4 c
 map2 f ( x1, y1, z1, w1 ) ( x2, y2, z2, w2 ) =
@@ -100,7 +108,9 @@ map2 f ( x1, y1, z1, w1 ) ( x2, y2, z2, w2 ) =
 
 
 {-|
+
     foldl (\elem acc -> acc + elem^2) 0 (2,4,1,2) == 25
+
 -}
 foldl : (elem -> acc -> acc) -> acc -> Vec4 elem -> acc
 foldl f start ( x, y, z, w ) =
@@ -108,7 +118,9 @@ foldl f start ( x, y, z, w ) =
 
 
 {-|
+
     foldr (::) [] (1,2,3,5) == [1,2,3,5]
+
 -}
 foldr : (elem -> acc -> acc) -> acc -> Vec4 elem -> acc
 foldr f start ( x, y, z, w ) =
@@ -122,6 +134,7 @@ foldr f start ( x, y, z, w ) =
 {-| `v + w`
 
     add (2,4,1,-2) (3,-6,2,1) == (5,-2,3,-1)
+
 -}
 add : Float4 -> Float4 -> Float4
 add ( x1, y1, z1, w1 ) ( x2, y2, z2, w2 ) =
@@ -131,6 +144,7 @@ add ( x1, y1, z1, w1 ) ( x2, y2, z2, w2 ) =
 {-| `v - w`
 
     sub (4,6,1,2) (3,-1,-4,4) == (1,7,5,-2)
+
 -}
 sub : Float4 -> Float4 -> Float4
 sub ( x1, y1, z1, w1 ) ( x2, y2, z2, w2 ) =
@@ -140,6 +154,7 @@ sub ( x1, y1, z1, w1 ) ( x2, y2, z2, w2 ) =
 {-| `-v`
 
     negate (2,-1,5,1) == (-2,1,-5,-1)
+
 -}
 negate : Float4 -> Float4
 negate ( x, y, z, w ) =
@@ -149,6 +164,7 @@ negate ( x, y, z, w ) =
 {-| `a*v`
 
     scale (3/2) (4,2,6,10) == (6,3,9,15)
+
 -}
 scale : Float -> Float4 -> Float4
 scale a ( x, y, z, w ) =
@@ -158,6 +174,7 @@ scale a ( x, y, z, w ) =
 {-| `v/a`
 
     divideBy (3/2) (3,12,6,9) == (2,8,4,6)
+
 -}
 divideBy : Float -> Float4 -> Float4
 divideBy a ( x, y, z, w ) =
@@ -173,6 +190,7 @@ It links the length and angle of two vectors.
 `v dot w = |v|*|w|*cos(phi)`
 
     dot (1,2,2,3) (3,3,2,2) == 1*3 + 2*3 + 2*2 + 3*2 == 19
+
 -}
 dot : Float4 -> Float4 -> Float
 dot ( x1, y1, z1, w1 ) ( x2, y2, z2, w2 ) =
@@ -184,6 +202,7 @@ dot ( x1, y1, z1, w1 ) ( x2, y2, z2, w2 ) =
 `|v| = sqrt(v dot v)`
 
     length (2,4,1,2) == sqrt (2^2+4^2+1^2+2^2) == 5
+
 -}
 length : Float4 -> Float
 length v =
@@ -196,6 +215,7 @@ so if you only need to compare lengths you can use this instead of the length.
 `|v|^2 = v dot w`
 
     lengthSquared (3,4,1,2) == 3^2+4^2+1^2+2^2 == 30
+
 -}
 lengthSquared : Float4 -> Float
 lengthSquared v =
@@ -207,10 +227,14 @@ lengthSquared v =
 `v/|v|`
 
     normalize (2,4,1,2) == (2/5,4/5,1/5,2/5)
+
 -}
 normalize : Float4 -> Float4
 normalize v =
-    divideBy (length v) v
+    if length v == 0 then
+        v
+    else
+        divideBy (length v) v
 
 
 {-| A unit vector pointing from `v` to `w`
@@ -218,6 +242,7 @@ normalize v =
 `(w - v)/|w - v|`
 
     directionFromTo (5,1,2,4) (7,5,3,6) == (2/5,4/5,1/5,2/5)
+
 -}
 directionFromTo : Float4 -> Float4 -> Float4
 directionFromTo a b =
@@ -229,6 +254,7 @@ directionFromTo a b =
 `|v - w| = |w - v|`
 
     distance (7,5,3,6) (5,1,2,4) == 5
+
 -}
 distance : Float4 -> Float4 -> Float
 distance a b =
@@ -240,6 +266,7 @@ distance a b =
 `|v - w|^2`
 
     distanceSquared (3,0,2,1) (0,2,4,1) == 17
+
 -}
 distanceSquared : Float4 -> Float4 -> Float
 distanceSquared a b =
@@ -251,6 +278,7 @@ distanceSquared a b =
 `acos((v dot w)/(|v|*|w|))`
 
     angle (-1,-1,2,0) (2,2,2,0) == pi/2    -- or 90°
+
 -}
 angle : Float4 -> Float4 -> Float
 angle a b =
@@ -258,7 +286,7 @@ angle a b =
         r =
             dot a b / (length a * length b)
     in
-        if r >= 1 then
-            0
-        else
-            acos r
+    if r >= 1 then
+        0
+    else
+        acos r
