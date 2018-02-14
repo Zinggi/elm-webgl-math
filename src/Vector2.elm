@@ -1,6 +1,7 @@
 module Vector2 exposing (..)
 
 {-|
+
 @docs Float2, Vec2
 
 @docs setX, setY, getX, getY, map, map2, foldl, foldr
@@ -8,6 +9,7 @@ module Vector2 exposing (..)
 @docs add, sub, negate, scale, divideBy
 
 @docs dot, length, lengthSquared, normalize, directionFromTo, distance, distanceSquared, angle, project, reject
+
 -}
 
 
@@ -50,7 +52,9 @@ setY a ( x, y ) =
 
 
 {-|
+
     map ((+) 1) (2,3) == (3,4)
+
 -}
 map : (a -> b) -> Vec2 a -> Vec2 b
 map f ( x, y ) =
@@ -58,7 +62,9 @@ map f ( x, y ) =
 
 
 {-|
+
     map2 (*) (2,4) (3,2) == (6,8)
+
 -}
 map2 : (a -> b -> c) -> Vec2 a -> Vec2 b -> Vec2 c
 map2 op ( x1, y1 ) ( x2, y2 ) =
@@ -66,7 +72,9 @@ map2 op ( x1, y1 ) ( x2, y2 ) =
 
 
 {-|
+
     foldl (+) 0 (2,4) == 6
+
 -}
 foldl : (elem -> acc -> acc) -> acc -> Vec2 elem -> acc
 foldl f start ( x, y ) =
@@ -74,7 +82,9 @@ foldl f start ( x, y ) =
 
 
 {-|
+
     foldr (-) 0 (1,12) == -11
+
 -}
 foldr : (elem -> acc -> acc) -> acc -> Vec2 elem -> acc
 foldr f start ( x, y ) =
@@ -88,6 +98,7 @@ foldr f start ( x, y ) =
 {-| `v + w`
 
     add (1,2) (4,5) == (5,7)
+
 -}
 add : Float2 -> Float2 -> Float2
 add ( x1, y1 ) ( x2, y2 ) =
@@ -97,6 +108,7 @@ add ( x1, y1 ) ( x2, y2 ) =
 {-| `v - w`
 
     sub (3,1) (-3,8) == (6,-7)
+
 -}
 sub : Float2 -> Float2 -> Float2
 sub ( x1, y1 ) ( x2, y2 ) =
@@ -106,6 +118,7 @@ sub ( x1, y1 ) ( x2, y2 ) =
 {-| `-v`
 
     negate (2,-4) == (-2,4)
+
 -}
 negate : Float2 -> Float2
 negate ( x, y ) =
@@ -114,7 +127,9 @@ negate ( x, y ) =
 
 {-| `a*v`
 
-    scale 3 (2,3) = (6,9)
+    scale 3 ( 2, 3 ) =
+        ( 6, 9 )
+
 -}
 scale : Float -> Float2 -> Float2
 scale a ( x, y ) =
@@ -124,6 +139,7 @@ scale a ( x, y ) =
 {-| `v/a`
 
     divideBy 4 (12,16) == (3,4)
+
 -}
 divideBy : Float -> Float2 -> Float2
 divideBy a ( x, y ) =
@@ -139,6 +155,7 @@ It links the length and angle of two vectors.
 `v dot w = |v|*|w|*cos(phi)`
 
     dot (1,2) (3,2) == 1*3 + 2*2 == 7
+
 -}
 dot : Float2 -> Float2 -> Float
 dot ( x1, y1 ) ( x2, y2 ) =
@@ -150,6 +167,7 @@ dot ( x1, y1 ) ( x2, y2 ) =
 `(v dot w)/|w| * w/|w|`
 
     project (2,1) (4,0) == (2,0)
+
 -}
 project : Float2 -> Float2 -> Float2
 project v w =
@@ -157,7 +175,7 @@ project v w =
         l_w =
             lengthSquared w
     in
-        scale ((dot v w) / l_w) w
+    scale (dot v w / l_w) w
 
 
 {-| The rejection of `v` onto `w`. This is always perpendicular to the projection.
@@ -165,6 +183,7 @@ project v w =
 `v - (project v w)`
 
     reject (2,1) (4,0) == (0,1)
+
 -}
 reject : Float2 -> Float2 -> Float2
 reject v w =
@@ -176,6 +195,7 @@ reject v w =
 `|v| = sqrt(v dot v)`
 
     length (3,4) == sqrt(3^2+4^2) == 5
+
 -}
 length : Float2 -> Float
 length v =
@@ -188,6 +208,7 @@ so if you only need to compare lengths you can use this instead of the length.
 `|v|^2 = v dot w`
 
     lengthSquared (3,4) == 3^2+4^2 == 25
+
 -}
 lengthSquared : Float2 -> Float
 lengthSquared v =
@@ -199,10 +220,14 @@ lengthSquared v =
 `v/|v|`
 
     normalize (3,4) == (3/5,4/5)
+
 -}
 normalize : Float2 -> Float2
 normalize v =
-    divideBy (length v) v
+    if length v == 0 then
+        v
+    else
+        divideBy (length v) v
 
 
 {-| A unit vector pointing from `v` to `w`
@@ -210,6 +235,7 @@ normalize v =
 `(w - v)/|w - v|`
 
     directionFromTo (5,1) (8,5) == (3/5,4/5)
+
 -}
 directionFromTo : Float2 -> Float2 -> Float2
 directionFromTo v w =
@@ -221,6 +247,7 @@ directionFromTo v w =
 `|v - w| = |w - v|`
 
     distance (3,0) (0,4) == 5
+
 -}
 distance : Float2 -> Float2 -> Float
 distance v w =
@@ -232,6 +259,7 @@ distance v w =
 `|v - w|^2`
 
     distanceSquared (3,0) (0,4) == 25
+
 -}
 distanceSquared : Float2 -> Float2 -> Float
 distanceSquared v w =
@@ -243,6 +271,7 @@ distanceSquared v w =
 `acos((v dot w)/(|v|*|w|))`
 
     angle (1,0) (2,2) == pi/4    -- or 45°
+
 -}
 angle : Float2 -> Float2 -> Float
 angle v w =
@@ -250,7 +279,7 @@ angle v w =
         r =
             dot v w / (length v * length w)
     in
-        if r >= 1 then
-            0
-        else
-            acos r
+    if r >= 1 then
+        0
+    else
+        acos r
