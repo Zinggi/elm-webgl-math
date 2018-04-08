@@ -1,4 +1,4 @@
-module Float4x4 exposing (all)
+module Float4x4 exposing (..)
 
 import Fuzz exposing (..)
 import Helper exposing (..)
@@ -6,22 +6,6 @@ import Test exposing (..)
 import Expect
 import Matrix4 as V
 import Vector3 as V3
-
-
-all =
-    describe "Float4x4"
-        [ add
-        , minus
-        , mul
-        , transpose
-        , translate
-        , transform
-        , makeTransform
-        , inverseRigidBodyTransform
-        , makeLookAt1
-        , makeLookAt2
-        ]
-
 
 
 -- We can't test this library the same way because we can't construct/destruct a Matrix4 by hand

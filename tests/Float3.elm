@@ -1,4 +1,4 @@
-module Float3 exposing (all)
+module Float3 exposing (..)
 
 import Fuzz exposing (..)
 import Helper exposing (..)
@@ -10,11 +10,6 @@ import Vector3 as V
 
 f2 =
     Ref.fromTuple
-
-
-all =
-    describe "Float3"
-        [ scale, add, dot, lengthSquared, normalize, directionFromTo, distance, distanceSquared ]
 
 
 

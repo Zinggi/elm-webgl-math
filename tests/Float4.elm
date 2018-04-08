@@ -1,4 +1,4 @@
-module Float4 exposing (all)
+module Float4 exposing (..)
 
 import Fuzz exposing (..)
 import Helper exposing (..)
@@ -10,11 +10,6 @@ import Vector4 as V
 
 f2 =
     Ref.fromTuple
-
-
-all =
-    describe "Float4"
-        [ scale, add, dot, lengthSquared, normalize, directionFromTo, distance, distanceSquared ]
 
 
 

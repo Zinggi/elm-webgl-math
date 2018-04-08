@@ -25,7 +25,7 @@ smallNonZeroFloat =
                 y
         )
         (Fuzz.floatRange 0.001 1000)
-        (Fuzz.floatRange -0.001 -1000)
+        (Fuzz.floatRange -1000 -0.001)
         Fuzz.bool
 
 

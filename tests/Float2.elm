@@ -1,4 +1,4 @@
-module Float2 exposing (all)
+module Float2 exposing (..)
 
 import Helper exposing (..)
 import Test exposing (..)
@@ -8,11 +8,6 @@ import Vector2 as V
 
 f2 =
     Ref.fromTuple
-
-
-all =
-    describe "Float2"
-        [ scale, add, dot, lengthSquared, normalize, directionFromTo, distance, distanceSquared ]
 
 
 
