@@ -1,6 +1,11 @@
 module Matrix3 exposing (..)
 
-{-| This will have some more functions soon.
+{-|
+
+
+## Matrix3
+
+This will have some more functions soon.
 Currently it's missing 2D transformation functions.
 
 @docs Mat3, Float3x3
@@ -32,6 +37,7 @@ type alias Float3x3 =
     I = |1 0 0|
         |0 1 0|
         |0 0 1|
+
 -}
 identity : Float3x3
 identity =
@@ -110,8 +116,12 @@ mulVector ( v1, v2, v3 ) v =
 
 
 {-|
+
     |v'| = A*|v|  v'/w
     |w |     |1|,
+
+NaN/infinity warning: if w = 0
+
 -}
 transform : Float3x3 -> Float2 -> Float2
 transform m ( x, y ) =

@@ -1,17 +1,24 @@
 module Matrix2 exposing (..)
 
 {-|
+
+
+## Matrix2
+
 @docs Float2x2, Mat2
+
 
 ## General operations
 
 @docs map, map2, foldl, foldr
+
 
 ## Math
 
 @docs identity, fromRows, fromColumns
 
 @docs add, sub, mul, elementWiseMul, mulByConst, transpose, mulVector
+
 
 ## Other
 
@@ -33,7 +40,9 @@ type alias Float2x2 =
 
 
 {-|
-    elementsSquared = map (\x -> x^2)
+
+    elementsSquared =
+        map (\x -> x ^ 2)
 -}
 map : (a -> b) -> Mat2 a -> Mat2 b
 map f =
@@ -41,7 +50,9 @@ map f =
 
 
 {-|
-    elementWiseDivision = map2 (/)
+
+    elementWiseDivision =
+        map2 (/)
 -}
 map2 : (a -> b -> c) -> Mat2 a -> Mat2 b -> Mat2 c
 map2 f =
@@ -70,6 +81,7 @@ foldr f init ( r1, r2 ) =
         |0 1|
 
     I*A = A = A*I
+
 -}
 identity : Float2x2
 identity =
@@ -91,6 +103,7 @@ fromRows a b =
 {-| Construct a matrix from columns.
 
     fromColumns (1,2) (3,4) == ((1,3),(2,4))
+
 -}
 fromColumns : Float2 -> Float2 -> Float2x2
 fromColumns ( a11, a21 ) ( a12, a22 ) =
@@ -101,6 +114,7 @@ fromColumns ( a11, a21 ) ( a12, a22 ) =
 
     |a b|   |e f|   |a+e b+f|
     |c d| + |g h| = |c+g d+h|
+
 -}
 add : Float2x2 -> Float2x2 -> Float2x2
 add =
@@ -110,6 +124,7 @@ add =
 {-| Matrix subtraction.
 
 `A - B`
+
 -}
 sub : Float2x2 -> Float2x2 -> Float2x2
 sub =
@@ -119,6 +134,7 @@ sub =
 {-| Matrix multiplication.
 
 `A*B`
+
 -}
 mul : Float2x2 -> Float2x2 -> Float2x2
 mul ( ( a11, a12 ), ( a21, a22 ) ) ( ( b11, b12 ), ( b21, b22 ) ) =
@@ -131,6 +147,7 @@ mul ( ( a11, a12 ), ( a21, a22 ) ) ( ( b11, b12 ), ( b21, b22 ) ) =
 
     |a b|    |e f|   |ae bf|
     |c d| .* |g h| = |cg dh|
+
 -}
 elementWiseMul : Float2x2 -> Float2x2 -> Float2x2
 elementWiseMul =
@@ -175,6 +192,7 @@ transpose ( ( a11, a12 ), ( a21, a22 ) ) =
 
           |a b| |x|   |ax+by|
     A*v = |c d|*|y| = |cx+dy|
+
 -}
 mulVector : Float2x2 -> Float2 -> Float2
 mulVector ( v1, v2 ) v =
@@ -194,14 +212,14 @@ mulVector ( v1, v2 ) v =
 --solve ((a11, a12), (a21, a22)) (bx, by) =
 
 
-{-|
-This checks whether `|A - B| < eps`.
+{-| This checks whether `|A - B| < eps`.
 
     almostEqual eps a b
 
 This is useful for testing, see the tests of this library for how this makes testing easy.
 
 Since any definition of a norm can be used for this, it uses the simple `maxNorm`
+
 -}
 almostEqual : Float -> Float2x2 -> Float2x2 -> Bool
 almostEqual eps a b =

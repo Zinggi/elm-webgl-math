@@ -1,22 +1,28 @@
 module Matrix4 exposing (..)
 
-{-| This module deals mostly with 3D transformation matrices.
+{-|
+
+
+## Matrix4
+
+This module deals mostly with 3D transformation matrices.
 
 We can represent a transformation of a 3D vector as a multiplication with a 4x4 matrix
 by writing the vector in homogeneous coordinates.
 
 Here are a few useful links if you want to understand the math behind this library.
 
-http://learnopengl.com/#!Getting-started/Transformations
-http://www.codinglabs.net/article_world_view_projection_matrix.aspx
-http://www.euclideanspace.com/maths/geometry/affine/index.htm
-
+<http://learnopengl.com/#!Getting-started/Transformations>
+<http://www.codinglabs.net/article_world_view_projection_matrix.aspx>
+<http://www.euclideanspace.com/maths/geometry/affine/index.htm>
 
 @docs Float4x4, Mat4
+
 
 ## General operations
 
 @docs map, map2, foldl, foldr
+
 
 ## General math
 
@@ -26,6 +32,7 @@ http://www.euclideanspace.com/maths/geometry/affine/index.htm
 
 
 ## Transformation matrices
+
 A transformation matrix represents an arbitrary transform on a 3d vector.
 To transform a 3d vector v, we multiply it with a 4x4 transformation matrix M.
 To do that we need to write v in homogeneous coordinates,
@@ -42,11 +49,11 @@ Note that to understand how a vector will be transformed, it helps to read it ba
 
 Means that `v` will be scaled by the matrix `S`, then rotated by `R` and finally translated by `T`.
 
-
 @docs transform
 
 
 ### Affine transformations
+
 These represent a transform that preserves shapes, e.g. translations, rotations and scaling.
 These are composed of a 3x3 rotation and scale matrix M and a translation vector t:
 
@@ -57,27 +64,30 @@ These are composed of a 3x3 rotation and scale matrix M and a translation vector
 @docs rotate, scale, translate, transformBy
 
 TODO: does it make sense for these to be post multiplied?
-    This means that currently these operations will be done before doing the transform,
-    meaning they will act as local transformations.
-    However this makes creating a composed transformation weird,
-    as the order of operations might be counter-intuitive!
-    E.g. `identity |> translate |> rotate` actually corresponds to `I*T*R`
-    which means rotate first, then translate.
+This means that currently these operations will be done before doing the transform,
+meaning they will act as local transformations.
+However this makes creating a composed transformation weird,
+as the order of operations might be counter-intuitive!
+E.g. `identity |> translate |> rotate` actually corresponds to `I*T*R`
+which means rotate first, then translate.
 
 @docs makeLookAt, makeBasis
 
+
 #### Operations on affine transforms
+
 These can speed up some calculations, but are only correct if actually used with affine transforms.
 
 @docs transformAffine, mulAffine, inverseRigidBodyTransform
 
 
 ### Cameras
+
 Cameras can also be represented as a transformation matrix.
 **NOTE**: These transforms are generally **not** affine transforms!
 
 Camera projection matrices map their view of the scene into a 2x2x2 cube.
-Math heavy reference: http://www.songho.ca/opengl/gl_projectionmatrix.html
+Math heavy reference: <http://www.songho.ca/opengl/gl_projectionmatrix.html>
 
 @docs makeFrustum, makePerspective, makeOrtho, makeOrtho2d
 
@@ -159,6 +169,7 @@ identity =
 
 
 {-|
+
     fromRows a b c d == (a,b,c,d)
 -}
 fromRows : Float4 -> Float4 -> Float4 -> Float4 -> Float4x4
@@ -167,6 +178,7 @@ fromRows a b c d =
 
 
 {-|
+
     fromColumns a b c d == transpose (a,b,c,d)
 -}
 fromColumns : Float4 -> Float4 -> Float4 -> Float4 -> Float4x4
@@ -236,6 +248,7 @@ mul ( ( a11, a12, a13, a14 ), ( a21, a22, a23, a24 ), ( a31, a32, a33, a34 ), ( 
 Flips a matrix along it's diagonal.
 
 `A^T`
+
 -}
 transpose : Float4x4 -> Float4x4
 transpose ( ( a11, a12, a13, a14 ), ( a21, a22, a23, a24 ), ( a31, a32, a33, a34 ), ( a41, a42, a43, a44 ) ) =
@@ -273,6 +286,8 @@ In math terms, we do:
     |v'| = A*|v|  v'/w
     |w |     |1|,
 
+NaN/infinity warning: if w = 0
+
 -}
 transform : Float4x4 -> Float3 -> Float3
 transform ( ( a11, a12, a13, a14 ), ( a21, a22, a23, a24 ), ( a31, a32, a33, a34 ), ( a41, a42, a43, a44 ) ) ( x, y, z ) =
@@ -298,6 +313,9 @@ transform ( ( a11, a12, a13, a14 ), ( a21, a22, a23, a24 ), ( a31, a32, a33, a34
 This represents a rotation of `angle` degrees (in radians)
 around the vector specified by `axis`.
 The rotation is specified according to the right hand rule.
+
+NaN warning: if axis = 0
+
 -}
 makeRotate : Float -> Float3 -> Float4x4
 makeRotate angle axis =
@@ -324,8 +342,10 @@ makeRotate angle axis =
         )
 
 
-{-|
-Rotate an affine transform by an angle along the given axis.
+{-| Rotate an affine transform by an angle along the given axis.
+
+NaN warning: if axis = 0
+
 -}
 rotate : Float -> Float3 -> Float4x4 -> Float4x4
 rotate angle (( a0, a1, a2 ) as axis) ( ( m11, m12, m13, m14 ), ( m21, m22, m23, m24 ), ( m31, m32, m33, m34 ), m4 ) =
@@ -391,8 +411,7 @@ makeScale ( x, y, z ) =
     )
 
 
-{-|
-Scale an affine transform with the given vector.
+{-| Scale an affine transform with the given vector.
 Same as `M*makeScale(s)`
 -}
 scale : Float3 -> Float4x4 -> Float4x4
@@ -415,8 +434,7 @@ makeTranslate ( x, y, z ) =
     )
 
 
-{-|
-Translate an affine transform by the given vector.
+{-| Translate an affine transform by the given vector.
 Same as `M*makeTranslate(t)`
 -}
 translate : Float3 -> Float4x4 -> Float4x4
@@ -428,8 +446,7 @@ translate ( x, y, z ) ( ( a11, a12, a13, a14 ), ( a21, a22, a23, a24 ), ( a31, a
     )
 
 
-{-|
-Create an affine transform from 3 orthogonal (perpendicular) vectors.
+{-| Create an affine transform from 3 orthogonal (perpendicular) vectors.
 Make sure xAxis yAxis zAxis are really orthonormal,
 otherwise you won't get an affine transform!
 Only use this if you know what you are doing.
@@ -446,12 +463,13 @@ makeBasis ( ax, ay, az ) ( bx, by, bz ) ( cx, cy, cz ) =
     )
 
 
-{-|
-Create a transform that makes a 3D object look at the target.
+{-| Create a transform that makes a 3D object look at the target.
 Very often used with cameras to make them look at a target.
 The up vector is usually (0, 1, 0), e.g. the y-axis. (some people also use the z-axis)
 
     makeLookAt cameraPosition target (0, 1, 0)
+
+NaN warning: if cameraPosition = target
 
 -}
 makeLookAt : Float3 -> Float3 -> Float3 -> Float4x4
@@ -499,6 +517,9 @@ makeLookAt eye target up =
 The pivot is the 'center' of the rotation and scaling operation.
 
     makeTransform translation scale angle rotationAxis pivot
+
+NaN warning: if rotationAxis = 0
+
 -}
 makeTransform : Float3 -> Float3 -> Float -> Float3 -> Float3 -> Float4x4
 makeTransform ( tx, ty, tz ) ( sx, sy, sz ) angle axis ( px, py, pz ) =
@@ -561,6 +582,7 @@ transformAffine ( ( a11, a12, a13, a14 ), ( a21, a22, a23, a24 ), ( a31, a32, a3
 {-| Transform a vector by the transformation specified in the parameters
 
     transformBy translation scale angle rotationAxis pivot v
+
 -}
 transformBy : Float3 -> Float3 -> Float -> Float3 -> Float3 -> Float3 -> Float3
 transformBy translation scale angle axis pivot =
@@ -610,8 +632,7 @@ mulAffine ( ( a11, a12, a13, a14 ), ( a21, a22, a23, a24 ), ( a31, a32, a33, a34
     )
 
 
-{-|
-Calculate the inverse of a rigid body transform.
+{-| Calculate the inverse of a rigid body transform.
 This a special form of affine transform, that is only composed of
 rotations and translations.
 
@@ -622,6 +643,7 @@ It's usually easier and faster to just do the construction of the matrix you wan
 
     inverseRigidBodyTransform (makeRotate 1.2 (0,1,0)) == makeRotate -1.2 (0,1,0)
     inverseRigidBodyTransform (makeScale (2,3,1)) == makeScale (1/2,1/3,1)
+
 -}
 inverseRigidBodyTransform : Float4x4 -> Float4x4
 inverseRigidBodyTransform ( ( a11, a12, a13, t1 ), ( a21, a22, a23, t2 ), ( a31, a32, a33, t3 ), a4 ) =
@@ -643,7 +665,10 @@ inverseRigidBodyTransform ( ( a11, a12, a13, t1 ), ( a21, a22, a23, t2 ), ( a31,
 
     makeFrustum left right bottom top znear zfar
 
-http://www.songho.ca/opengl/gl_projectionmatrix.html
+<http://www.songho.ca/opengl/gl_projectionmatrix.html>
+
+NaN warning: if left = right or bottom = top or znear = zfar
+
 -}
 makeFrustum : Float -> Float -> Float -> Float -> Float -> Float -> Float4x4
 makeFrustum left right bottom top znear zfar =
@@ -666,6 +691,9 @@ fovy - field of view in the y axis, in degrees
 aspect - aspect ratio
 znear - the near z distance of the projection
 zfar - the far z distance of the projection
+
+NaN warning: if znear = zfar or fovy = 720+n*1440
+
 -}
 makePerspective : Float -> Float -> Float -> Float -> Float4x4
 makePerspective fovy aspect znear zfar =
@@ -685,6 +713,9 @@ makePerspective fovy aspect znear zfar =
 {-| This creates an orthographic projection.
 
     makeOrtho left right bottom top znear zfar
+
+NaN warning: if left = right or bottom = top or znear = zfar
+
 -}
 makeOrtho : Float -> Float -> Float -> Float -> Float -> Float -> Float4x4
 makeOrtho left right bottom top znear zfar =
@@ -702,20 +733,23 @@ makeOrtho left right bottom top znear zfar =
 {-| Same as `makeOrtho`, but with `znear = -1` and `zfar = 1` set.
 
     makeOrtho2d left right bottom top
+
+NaN warning: if left = right or bottom = top
+
 -}
 makeOrtho2d : Float -> Float -> Float -> Float -> Float4x4
 makeOrtho2d left right bottom top =
     makeOrtho left right bottom top -1 1
 
 
-{-|
-This checks whether `|A - B| <= eps`.
+{-| This checks whether `|A - B| <= eps`.
 
     almostEqual eps a b
 
 This is useful for testing, see the tests of this library for how this makes testing easy.
 
 Since any definition of a norm can be used for this, it uses the simple `maxNorm`
+
 -}
 almostEqual : Float -> Float4x4 -> Float4x4 -> Bool
 almostEqual eps a b =
